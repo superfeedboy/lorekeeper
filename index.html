@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LoreKeeper - Votre Compagnon JDR Desktop</title>
+    <link rel="icon" type="image/png" href="lorekeeper-logo-alpha.png">
+    <!-- Tailwind CSS pour un design propre et moderne -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen flex flex-col justify-between">
+
+    <!-- En-tête / Hero -->
+    <header class="max-w-4xl mx-auto px-6 py-12 text-center">
+        <div class="inline-block mb-4 p-3 bg-slate-900 border border-slate-800 rounded-2xl shadow-xl">
+            <!-- Logo de l'application -->
+            <img src="lorekeeper-logo-alpha.png" alt="Logo LoreKeeper"
+                class="w-24 h-24 object-contain mx-auto rounded-xl">
+        </div>
+        <h1 class="text-5xl font-extrabold tracking-tight text-amber-500 mb-4">LoreKeeper</h1>
+        <p class="text-xl text-slate-400 max-w-2xl mx-auto mb-8">
+            L'application desktop ultime pour les maîtres du jeu et les joueurs. Gérez vos campagnes, vos PNJ à la volée
+            et vos lancers de dés en mode local-first.
+        </p>
+
+        <!-- Boutons de Téléchargement -->
+        <div class="flex flex-wrap justify-center gap-4 mb-8">
+            <a href="https://github.com/TON-PSEUDO/lorekeeper/releases/latest"
+                class="bg-amber-600 hover:bg-amber-500 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition flex items-center gap-2">
+                🍏 Télécharger pour Mac
+            </a>
+            <a href="https://github.com/TON-PSEUDO/lorekeeper/releases/latest"
+                class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition flex items-center gap-2">
+                💻 Télécharger pour PC (Windows)
+            </a>
+        </div>
+
+        <!-- Bouton Soutenir / Offrir une bière -->
+        <div>
+            <a href="https://ko-fi.com/ton-lien" target="_blank"
+                class="inline-flex items-center gap-2 bg-pink-600 hover:bg-pink-500 text-white text-sm font-semibold py-2 px-5 rounded-full shadow transition">
+                🍺 M'offrir une bière
+            </a>
+        </div>
+    </header>
+
+    <!-- Contenu Principal / Fonctionnalités & Légal -->
+    <main class="max-w-3xl mx-auto px-6 py-8 space-y-12 text-slate-300">
+
+        <!-- Fonctionnalités clés -->
+        <section class="grid md:grid-cols-3 gap-6 text-center">
+            <div class="bg-slate-900/50 p-6 rounded-xl border border-slate-800">
+                <h3 class="font-bold text-amber-400 mb-2">100% Hors-ligne</h3>
+                <p class="text-sm text-slate-400">Vos données restent chez vous dans une base SQLite embarquée.</p>
+            </div>
+            <div class="bg-slate-900/50 p-6 rounded-xl border border-slate-800">
+                <h3 class="font-bold text-amber-400 mb-2">Assisté par IA</h3>
+                <p class="text-sm text-slate-400">Générez des PNJ et des scénarios à la volée avec Ollama (Mistral).</p>
+            </div>
+            <div class="bg-slate-900/50 p-6 rounded-xl border border-slate-800">
+                <h3 class="font-bold text-amber-400 mb-2">Multijoueur Local</h3>
+                <p class="text-sm text-slate-400">Partagez vos lancers de dés et vos suivis de session en direct par
+                    token.</p>
+            </div>
+        </section>
+
+        <!-- Conditions d'utilisation & Confidentialité -->
+        <div class="grid md:grid-cols-2 gap-8 pt-8 border-t border-slate-900">
+            <section id="terms" class="space-y-3">
+                <h2 class="text-xl font-bold text-slate-200">Conditions d'Utilisation</h2>
+                <p class="text-sm text-slate-400 leading-relaxed">
+                    LoreKeeper est un logiciel libre mis à disposition "tel quel", sans garantie d'aucune sorte. Vous
+                    êtes libres de l'utiliser pour vos parties de jeux de rôle personnelles ou associatives.
+                    L'utilisation des modèles d'IA locaux se fait sous votre entière responsabilité matérielle.
+                </p>
+            </section>
+
+            <section id="privacy" class="space-y-3">
+                <h2 class="text-xl font-bold text-slate-200">Règles de Confidentialité</h2>
+                <p class="text-sm text-slate-400 leading-relaxed">
+                    Aucune donnée personnelle n'est collectée, stockée ou revendue sur des serveurs distants. Tout est
+                    stocké localement sur votre machine dans votre base de données SQLite. Vos campagnes et vos notes
+                    vous appartiennent à 100%.
+                </p>
+            </section>
+        </div>
+
+    </main>
+
+    <!-- Pied de page -->
+    <footer class="text-center py-8 text-xs text-slate-600 border-t border-slate-900 mt-12">
+        <p>&copy; 2026 LoreKeeper. Fait avec passion pour les passionnés de JDR.</p>
+    </footer>
+
+</body>
+
+</html>
