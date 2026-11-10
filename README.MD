@@ -45,40 +45,6 @@ LoreKeeper-site/
 
 ---
 
-## 🚀 Prévisualisation en local
-
-Aucune installation de paquets n'est requise. Vous pouvez :
-
-1. **Ouvrir directement le fichier** `index.html` dans votre navigateur.
-2. **Ou lancer un petit serveur HTTP local** depuis la racine du projet :
-
-```bash
-# Avec Python 3
-python3 -m http.server 8080
-```
-
-Puis ouvrir [http://localhost:8080](http://localhost:8080) dans votre navigateur.
-
----
-
-## ⚙️ Personnalisation avant mise en ligne
-
-Avant de publier le site, pensez à mettre à jour les URLs *placeholder* dans [`index.html`](index.html) :
-
-- **Liens de téléchargement (Mac & Windows)** : remplacer `https://github.com/TON-PSEUDO/lorekeeper/releases/latest` par l'URL réelle de vos *releases* (ex. `https://github.com/superfeedboy/lorekeeper/releases/latest`).
-- **Lien de soutien** : remplacer `https://ko-fi.com/ton-lien` par votre page Ko-fi (ou supprimer/adapter le bouton si non utilisé).
-
----
-
-## 🌐 Déploiement
-
-S'agissant d'un site purement statique, il peut être hébergé gratuitement sur n'importe quelle plateforme statique :
-
-- **GitHub Pages** : activer Pages sur la branche principale (`master` / `main`), dossier racine `/`.
-- **Netlify / Vercel / Cloudflare Pages** : connecter le dépôt sans commande de *build* et publier le répertoire racine `.`.
-
----
-
 ## 📄 Licence & Crédits
 
 © 2026 LoreKeeper — Fait avec passion pour les passionnés de JDR.
