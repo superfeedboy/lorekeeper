@@ -8,13 +8,147 @@
     <link rel="icon" type="image/png" href="lorekeeper-logo-alpha.png">
     <!-- Tailwind CSS pour un design propre et moderne -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .arcane-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+            background: radial-gradient(circle at 20% 15%, #341b69 0%, #151728 48%, #07080d 100%);
+            background-size: 160% 160%;
+            animation: bgGradientPulse 14s ease-in-out infinite alternate;
+        }
+
+        @keyframes bgGradientPulse {
+            0% {
+                background-position: 0% 20%;
+            }
+            100% {
+                background-position: 100% 80%;
+            }
+        }
+
+        .auth-glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(85px);
+            pointer-events: none;
+        }
+
+        .orb-1 {
+            width: 390px;
+            height: 390px;
+            background: #7c3aed;
+            top: -80px;
+            left: -60px;
+            opacity: 0.5;
+            animation: floatOrb1 11s ease-in-out infinite alternate;
+        }
+
+        .orb-2 {
+            width: 350px;
+            height: 350px;
+            background: #d4af37;
+            bottom: -90px;
+            right: -60px;
+            opacity: 0.32;
+            animation: floatOrb2 13s ease-in-out infinite alternate;
+        }
+
+        .orb-3 {
+            width: 260px;
+            height: 260px;
+            background: #3b82f6;
+            top: 45%;
+            left: 65%;
+            opacity: 0.22;
+            animation: floatOrb3 9s ease-in-out infinite alternate;
+        }
+
+        @keyframes floatOrb1 {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+            100% {
+                transform: translate(95px, 65px) scale(1.18);
+            }
+        }
+
+        @keyframes floatOrb2 {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+            100% {
+                transform: translate(-90px, -70px) scale(1.22);
+            }
+        }
+
+        @keyframes floatOrb3 {
+            0% {
+                transform: translate(0, 0) scale(0.9);
+            }
+            100% {
+                transform: translate(-110px, 50px) scale(1.15);
+            }
+        }
+
+        .particles-layer {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .arcane-particle {
+            position: absolute;
+            bottom: -30px;
+            opacity: 0;
+            color: rgba(212, 175, 55, 0.55);
+            filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.7));
+            animation: floatParticle linear infinite;
+        }
+
+        @keyframes floatParticle {
+            0% {
+                transform: translateY(0) rotate(0deg) scale(0.8);
+                opacity: 0;
+            }
+            20% {
+                opacity: 0.75;
+            }
+            80% {
+                opacity: 0.65;
+            }
+            100% {
+                transform: translateY(-96vh) rotate(360deg) scale(1.25);
+                opacity: 0;
+            }
+        }
+    </style>
 </head>
 
-<body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen flex flex-col justify-between">
+<body class="bg-[#07080d] text-slate-100 font-sans antialiased min-h-screen flex flex-col justify-between relative">
+
+    <!-- Fond dynamique avec orbes et runes flottantes (reproduit de l'application) -->
+    <div class="arcane-bg" aria-hidden="true">
+        <div class="auth-glow-orb orb-1"></div>
+        <div class="auth-glow-orb orb-2"></div>
+        <div class="auth-glow-orb orb-3"></div>
+        <div class="particles-layer">
+            <span class="arcane-particle" style="left: 12%; font-size: 6px; animation-duration: 11s; animation-delay: 0s;">✦</span>
+            <span class="arcane-particle" style="left: 26%; font-size: 10px; animation-duration: 14s; animation-delay: 2s;">🎲</span>
+            <span class="arcane-particle" style="left: 42%; font-size: 7px; animation-duration: 10s; animation-delay: 4s;">✧</span>
+            <span class="arcane-particle" style="left: 58%; font-size: 9px; animation-duration: 13s; animation-delay: 1s;">⚔️</span>
+            <span class="arcane-particle" style="left: 74%; font-size: 6px; animation-duration: 12s; animation-delay: 3s;">✦</span>
+            <span class="arcane-particle" style="left: 88%; font-size: 11px; animation-duration: 15s; animation-delay: 2.5s;">✨</span>
+        </div>
+    </div>
 
     <!-- En-tête / Hero -->
-    <header class="max-w-4xl mx-auto px-6 py-12 text-center">
-        <div class="inline-block mb-4 p-3 bg-slate-900 border border-slate-800 rounded-2xl shadow-xl">
+    <header class="relative z-10 max-w-4xl mx-auto px-6 py-12 text-center">
+        <div class="inline-block mb-4 p-3 bg-slate-900/75 backdrop-blur-md border border-slate-800 rounded-2xl shadow-xl">
             <!-- Logo de l'application -->
             <img src="lorekeeper-logo-alpha.png" alt="Logo LoreKeeper"
                 class="w-24 h-24 object-contain mx-auto rounded-xl">
@@ -47,19 +181,19 @@
     </header>
 
     <!-- Contenu Principal / Fonctionnalités & Légal -->
-    <main class="max-w-3xl mx-auto px-6 py-8 space-y-12 text-slate-300">
+    <main class="relative z-10 max-w-3xl mx-auto px-6 py-8 space-y-12 text-slate-300">
 
         <!-- Fonctionnalités clés -->
         <section class="grid md:grid-cols-3 gap-6 text-center">
-            <div class="bg-slate-900/50 p-6 rounded-xl border border-slate-800">
+            <div class="bg-slate-900/55 backdrop-blur-md p-6 rounded-xl border border-slate-800/80">
                 <h3 class="font-bold text-amber-400 mb-2">100% Hors-ligne</h3>
                 <p class="text-sm text-slate-400">Vos données restent chez vous dans une base SQLite embarquée.</p>
             </div>
-            <div class="bg-slate-900/50 p-6 rounded-xl border border-slate-800">
+            <div class="bg-slate-900/55 backdrop-blur-md p-6 rounded-xl border border-slate-800/80">
                 <h3 class="font-bold text-amber-400 mb-2">Assisté par IA</h3>
                 <p class="text-sm text-slate-400">Générez des PNJ et des scénarios à la volée avec Ollama (Mistral).</p>
             </div>
-            <div class="bg-slate-900/50 p-6 rounded-xl border border-slate-800">
+            <div class="bg-slate-900/55 backdrop-blur-md p-6 rounded-xl border border-slate-800/80">
                 <h3 class="font-bold text-amber-400 mb-2">Multijoueur Local</h3>
                 <p class="text-sm text-slate-400">Partagez vos lancers de dés et vos suivis de session en direct par
                     token.</p>
@@ -67,7 +201,7 @@
         </section>
 
         <!-- Conditions d'utilisation & Confidentialité -->
-        <div class="grid md:grid-cols-2 gap-8 pt-8 border-t border-slate-900">
+        <div class="grid md:grid-cols-2 gap-8 pt-8 border-t border-slate-800/70">
             <section id="terms" class="space-y-3">
                 <h2 class="text-xl font-bold text-slate-200">Conditions d'Utilisation</h2>
                 <p class="text-sm text-slate-400 leading-relaxed">
@@ -90,7 +224,7 @@
     </main>
 
     <!-- Pied de page -->
-    <footer class="text-center py-8 text-xs text-slate-600 border-t border-slate-900 mt-12">
+    <footer class="relative z-10 text-center py-8 text-xs text-slate-500 border-t border-slate-800/70 mt-12">
         <p>&copy; 2026 LoreKeeper. Fait avec passion pour les passionnés de JDR.</p>
     </footer>
 
