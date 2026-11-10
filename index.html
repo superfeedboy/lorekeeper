@@ -1,14 +1,48 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" class="scroll-smooth">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LoreKeeper - Votre Compagnon JDR Desktop</title>
+    <title>LoreKeeper — Le Compagnon JDR Desktop Local-First</title>
+    <meta name="description"
+        content="L'application desktop ultime pour les maîtres du jeu et les joueurs. Campagnes, PNJ générés par IA locale, suivi de combat et lancers de dés, 100% hors-ligne.">
     <link rel="icon" type="image/png" href="lorekeeper-logo-alpha.png">
-    <!-- Tailwind CSS pour un design propre et moderne -->
+
+    <!-- Polices modernes : Plus Jakarta Sans + Cinzel pour les touches épiques -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+                        display: ['"Cinzel"', 'serif'],
+                    },
+                    colors: {
+                        arcane: {
+                            bg: '#07080d',
+                            card: '#111422',
+                            gold: '#d4af37',
+                            violet: '#7c3aed',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
+        /* =========================================================
+           FOND DYNAMIQUE ARCANIQUE (identique à l'application)
+           ========================================================= */
         .arcane-bg {
             position: fixed;
             inset: 0;
@@ -20,10 +54,25 @@
             animation: bgGradientPulse 14s ease-in-out infinite alternate;
         }
 
+        /* Grille arcanique très discrète pour structurer l'espace */
+        .arcane-grid-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background-image:
+                linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+            background-size: 56px 56px;
+            mask-image: radial-gradient(ellipse 80% 60% at 50% 25%, #000 35%, transparent 100%);
+            -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 25%, #000 35%, transparent 100%);
+        }
+
         @keyframes bgGradientPulse {
             0% {
                 background-position: 0% 20%;
             }
+
             100% {
                 background-position: 100% 80%;
             }
@@ -70,6 +119,7 @@
             0% {
                 transform: translate(0, 0) scale(1);
             }
+
             100% {
                 transform: translate(95px, 65px) scale(1.18);
             }
@@ -79,6 +129,7 @@
             0% {
                 transform: translate(0, 0) scale(1);
             }
+
             100% {
                 transform: translate(-90px, -70px) scale(1.22);
             }
@@ -88,6 +139,7 @@
             0% {
                 transform: translate(0, 0) scale(0.9);
             }
+
             100% {
                 transform: translate(-110px, 50px) scale(1.15);
             }
@@ -115,118 +167,872 @@
                 transform: translateY(0) rotate(0deg) scale(0.8);
                 opacity: 0;
             }
+
             20% {
                 opacity: 0.75;
             }
+
             80% {
                 opacity: 0.65;
             }
+
             100% {
                 transform: translateY(-96vh) rotate(360deg) scale(1.25);
                 opacity: 0;
             }
         }
+
+        /* =========================================================
+           HALO DU LOGO (issu de AuthView.vue)
+           ========================================================= */
+        .logo-halo-wrapper {
+            position: relative;
+            width: 108px;
+            height: 108px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-aura-ring {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 1.5px dashed rgba(212, 175, 55, 0.5);
+            box-shadow: 0 0 28px rgba(124, 58, 237, 0.45), inset 0 0 18px rgba(212, 175, 55, 0.22);
+            animation: spinRing 22s linear infinite;
+        }
+
+        @keyframes spinRing {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .hero-logo-img {
+            width: 84px;
+            height: 84px;
+            object-fit: contain;
+            filter: drop-shadow(0 8px 22px rgba(212, 175, 55, 0.45));
+            animation: logoFloat 4.2s ease-in-out infinite alternate;
+        }
+
+        @keyframes logoFloat {
+            0% {
+                transform: translateY(-2px) scale(0.99);
+            }
+
+            100% {
+                transform: translateY(4px) scale(1.03);
+            }
+        }
+
+        /* =========================================================
+           CARTES BENTO GLASSMORPHISM + SPOTLIGHT INTERACTIF
+           ========================================================= */
+        .bento-card {
+            position: relative;
+            background: rgba(16, 19, 32, 0.68);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .bento-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background: radial-gradient(420px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                    rgba(212, 175, 55, 0.12),
+                    transparent 45%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .bento-card:hover {
+            border-color: rgba(212, 175, 55, 0.35);
+            transform: translateY(-2px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45), 0 0 30px rgba(124, 58, 237, 0.12);
+        }
+
+        .bento-card:hover::before {
+            opacity: 1;
+        }
+
+        /* Animation dégradé sur le texte d'accentuation */
+        .text-gold-gradient {
+            background: linear-gradient(135deg, #fde68a 0%, #d4af37 45%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* Animation du dé virtuel dans l'aperçu interactif */
+        @keyframes diceShake {
+
+            0%,
+            100% {
+                transform: rotate(0deg) scale(1);
+            }
+
+            25% {
+                transform: rotate(-16deg) scale(1.08);
+            }
+
+            50% {
+                transform: rotate(18deg) scale(1.12);
+            }
+
+            75% {
+                transform: rotate(-10deg) scale(1.05);
+            }
+        }
+
+        .dice-rolling {
+            animation: diceShake 0.42s ease-in-out;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+
+            .arcane-bg,
+            .auth-glow-orb,
+            .arcane-particle,
+            .logo-aura-ring,
+            .hero-logo-img {
+                animation: none !important;
+            }
+        }
     </style>
 </head>
 
-<body class="bg-[#07080d] text-slate-100 font-sans antialiased min-h-screen flex flex-col justify-between relative">
+<body
+    class="bg-[#07080d] text-slate-100 font-sans antialiased min-h-screen flex flex-col justify-between relative selection:bg-amber-500/30 selection:text-amber-200">
 
-    <!-- Fond dynamique avec orbes et runes flottantes (reproduit de l'application) -->
+    <!-- Fond dynamique avec orbes et runes flottantes (identique à l'application) -->
     <div class="arcane-bg" aria-hidden="true">
         <div class="auth-glow-orb orb-1"></div>
         <div class="auth-glow-orb orb-2"></div>
         <div class="auth-glow-orb orb-3"></div>
         <div class="particles-layer">
-            <span class="arcane-particle" style="left: 12%; font-size: 6px; animation-duration: 11s; animation-delay: 0s;">✦</span>
-            <span class="arcane-particle" style="left: 26%; font-size: 10px; animation-duration: 14s; animation-delay: 2s;">🎲</span>
-            <span class="arcane-particle" style="left: 42%; font-size: 7px; animation-duration: 10s; animation-delay: 4s;">✧</span>
-            <span class="arcane-particle" style="left: 58%; font-size: 9px; animation-duration: 13s; animation-delay: 1s;">⚔️</span>
-            <span class="arcane-particle" style="left: 74%; font-size: 6px; animation-duration: 12s; animation-delay: 3s;">✦</span>
-            <span class="arcane-particle" style="left: 88%; font-size: 11px; animation-duration: 15s; animation-delay: 2.5s;">✨</span>
+            <span class="arcane-particle"
+                style="left: 12%; font-size: 6px; animation-duration: 11s; animation-delay: 0s;">✦</span>
+            <span class="arcane-particle"
+                style="left: 26%; font-size: 10px; animation-duration: 14s; animation-delay: 2s;">🎲</span>
+            <span class="arcane-particle"
+                style="left: 42%; font-size: 7px; animation-duration: 10s; animation-delay: 4s;">✧</span>
+            <span class="arcane-particle"
+                style="left: 58%; font-size: 9px; animation-duration: 13s; animation-delay: 1s;">⚔️</span>
+            <span class="arcane-particle"
+                style="left: 74%; font-size: 6px; animation-duration: 12s; animation-delay: 3s;">✦</span>
+            <span class="arcane-particle"
+                style="left: 88%; font-size: 11px; animation-duration: 15s; animation-delay: 2.5s;">✨</span>
         </div>
     </div>
+    <div class="arcane-grid-overlay" aria-hidden="true"></div>
 
-    <!-- En-tête / Hero -->
-    <header class="relative z-10 max-w-4xl mx-auto px-6 py-12 text-center">
-        <div class="inline-block mb-4 p-3 bg-slate-900/75 backdrop-blur-md border border-slate-800 rounded-2xl shadow-xl">
-            <!-- Logo de l'application -->
-            <img src="lorekeeper-logo-alpha.png" alt="Logo LoreKeeper"
-                class="w-24 h-24 object-contain mx-auto rounded-xl">
+    <!-- Barre de navigation flottante -->
+    <div class="sticky top-4 z-30 px-4 sm:px-6 pt-4">
+        <nav
+            class="max-w-5xl mx-auto flex items-center justify-between gap-4 px-4 sm:px-6 py-2.5 rounded-2xl bg-[#101320]/75 backdrop-blur-xl border border-white/10 shadow-[0_12px_40px_rgba(0,0,0,0.45)]">
+            <a href="#" class="flex items-center gap-3 group">
+                <img src="lorekeeper-logo-alpha.png" alt="Logo LoreKeeper"
+                    class="w-8 h-8 object-contain rounded-lg transition-transform group-hover:scale-105">
+                <div class="flex items-center gap-2">
+                    <span class=" font-bold text-lg tracking-wide text-amber-400 leading-relaxed">LoreKeeper</span>
+                    <span
+                        class="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-amber-500/10 text-amber-300 border border-amber-500/25">
+                        Local-First
+                    </span>
+                </div>
+            </a>
+
+            <div class="hidden md:flex items-center gap-7 text-sm font-medium text-slate-300">
+                <a href="#preview" class="hover:text-amber-300 transition-colors">Aperçu</a>
+                <a href="#features" class="hover:text-amber-300 transition-colors">Fonctionnalités</a>
+                <a href="#roles" class="hover:text-amber-300 transition-colors">MJ &amp; Joueurs</a>
+                <a href="#privacy" class="hover:text-amber-300 transition-colors">Confidentialité</a>
+            </div>
+
+            <div class="flex items-center gap-2.5">
+                <a href="https://ko-fi.com/lorekeeperjdr" target="_blank" rel="noopener noreferrer"
+                    class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold text-pink-200 bg-pink-500/10 hover:bg-pink-500/20 border border-pink-400/25 transition">
+                    <span>🍺</span>
+                    <span>Soutenir</span>
+                </a>
+                <a href="https://github.com/superfeedboy/lorekeeper-desktop/releases/latest"
+                    class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-xl text-xs sm:text-sm font-bold text-slate-950 bg-gradient-to-r from-amber-300 via-amber-400 to-amber-500 hover:brightness-110 shadow-[0_0_20px_rgba(212,175,55,0.3)] transition">
+                    <span>Télécharger</span>
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="7 10 12 15 17 10" />
+                        <line x1="12" y1="15" x2="12" y2="3" />
+                    </svg>
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- =========================================================
+         HERO SECTION
+         ========================================================= -->
+    <header class="relative z-10 max-w-6xl mx-auto px-6 pt-12 pb-16 sm:pt-16 sm:pb-20 text-center">
+        <!-- Badge -->
+        <div
+            class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-violet-500/10 border border-violet-400/25 text-xs font-medium text-violet-200 mb-8 backdrop-blur-md">
+            <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+            <span>Compagnon JDR Desktop • Sans cloud, sans abonnement</span>
         </div>
-        <h1 class="text-5xl font-extrabold tracking-tight text-amber-500 mb-4">LoreKeeper</h1>
-        <p class="text-xl text-slate-400 max-w-2xl mx-auto mb-8">
-            L'application desktop ultime pour les maîtres du jeu et les joueurs. Gérez vos campagnes, vos PNJ à la volée
-            et vos lancers de dés en mode local-first.
+
+        <!-- Logo avec anneau runique de l'application -->
+        <div class="flex justify-center mb-6">
+            <div class="logo-halo-wrapper">
+                <div class="logo-aura-ring"></div>
+                <img src="lorekeeper-logo-alpha.png" alt="Logo LoreKeeper" class="hero-logo-img">
+            </div>
+        </div>
+
+        <!-- Titre Hero -->
+        <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight leading-[1.08] max-w-4xl mx-auto mb-6">
+            Votre table de JDR,
+            <span class="text-gold-gradient font-display">augmentée et souveraine.</span>
+        </h1>
+
+        <p class="text-base sm:text-xl text-slate-300/90 max-w-2xl mx-auto leading-relaxed mb-10">
+            Gérez vos campagnes, générez des PNJ et scénarios à la volée avec l’IA locale et partagez vos sessions
+            et lancers de dés en direct — <span class="text-slate-100 font-semibold">100 % sur votre machine</span>.
         </p>
 
-        <!-- Boutons de Téléchargement -->
-        <div class="flex flex-wrap justify-center gap-4 mb-8">
+        <!-- Boutons de Téléchargement & Soutien -->
+        <div class="flex flex-wrap items-center justify-center gap-4 mb-10">
             <a href="https://github.com/superfeedboy/lorekeeper-desktop/releases/latest"
-                class="bg-amber-600 hover:bg-amber-500 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition flex items-center gap-2">
-                🍏 Télécharger pour Mac
+                class="group relative inline-flex items-center gap-3 px-7 py-3.5 rounded-2xl bg-gradient-to-b from-amber-400 to-amber-600 text-slate-950 font-bold text-sm sm:text-base shadow-[0_10px_35px_rgba(212,175,55,0.35)] hover:shadow-[0_14px_42px_rgba(212,175,55,0.5)] hover:-translate-y-0.5 transition-all">
+                <!-- Apple Icon -->
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path
+                        d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.96 6.33c.67-.81 1.12-1.94 1-3.08-.96.04-2.13.64-2.82 1.45-.61.71-1.15 1.86-1.01 2.96 1.08.08 2.16-.52 2.83-1.33" />
+                </svg>
+                <span>Télécharger pour macOS</span>
             </a>
+
             <a href="https://github.com/superfeedboy/lorekeeper-desktop/releases/latest"
-                class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition flex items-center gap-2">
-                💻 Télécharger pour PC (Windows)
+                class="inline-flex items-center gap-3 px-7 py-3.5 rounded-2xl bg-slate-900/80 hover:bg-slate-800/90 backdrop-blur-md border border-white/15 hover:border-amber-400/40 text-slate-100 font-bold text-sm sm:text-base shadow-xl hover:-translate-y-0.5 transition-all">
+                <!-- Windows Icon -->
+                <svg class="w-4 h-4 text-sky-400" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path
+                        d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801" />
+                </svg>
+                <span>Télécharger pour Windows</span>
+            </a>
+
+            <a href="https://ko-fi.com/lorekeeperjdr" target="_blank" rel="noopener noreferrer"
+                class="inline-flex items-center gap-2 px-5 py-3.5 rounded-2xl bg-pink-500/15 hover:bg-pink-500/25 border border-pink-400/30 text-pink-200 font-semibold text-sm backdrop-blur-md hover:-translate-y-0.5 transition-all">
+                <span>🍺</span>
+                <span>M'offrir une bière</span>
             </a>
         </div>
 
-        <!-- Bouton Soutenir / Offrir une bière -->
-        <div>
-            <a href="https://ko-fi.com/lorekeeperjdr" target="_blank"
-                class="inline-flex items-center gap-2 bg-pink-600 hover:bg-pink-500 text-white text-sm font-semibold py-2 px-5 rounded-full shadow transition">
-                🍺 M'offrir une bière
-            </a>
+        <!-- Specs rapides -->
+        <div class="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-xs sm:text-sm text-slate-400">
+            <div class="flex items-center gap-2">
+                <span class="text-emerald-400">●</span>
+                <span>Base SQLite locale</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="text-violet-400">●</span>
+                <span>IA Ollama (Mistral)</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="text-amber-400">●</span>
+                <span>Règles &amp; États D&amp;D 5e</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="text-sky-400">●</span>
+                <span>Multijoueur local par token</span>
+            </div>
         </div>
     </header>
 
-    <!-- Contenu Principal / Fonctionnalités & Légal -->
-    <main class="relative z-10 max-w-3xl mx-auto px-6 py-8 space-y-12 text-slate-300">
+    <!-- =========================================================
+         CONTENU PRINCIPAL
+         ========================================================= -->
+    <main class="relative z-10 max-w-6xl mx-auto px-6 space-y-24 pb-20 w-full">
 
-        <!-- Fonctionnalités clés -->
-        <section class="grid md:grid-cols-3 gap-6 text-center">
-            <div class="bg-slate-900/55 backdrop-blur-md p-6 rounded-xl border border-slate-800/80">
-                <h3 class="font-bold text-amber-400 mb-2">100% Hors-ligne</h3>
-                <p class="text-sm text-slate-400">Vos données restent chez vous dans une base SQLite embarquée.</p>
-            </div>
-            <div class="bg-slate-900/55 backdrop-blur-md p-6 rounded-xl border border-slate-800/80">
-                <h3 class="font-bold text-amber-400 mb-2">Assisté par IA</h3>
-                <p class="text-sm text-slate-400">Générez des PNJ et des scénarios à la volée avec Ollama (Mistral).</p>
-            </div>
-            <div class="bg-slate-900/55 backdrop-blur-md p-6 rounded-xl border border-slate-800/80">
-                <h3 class="font-bold text-amber-400 mb-2">Multijoueur Local</h3>
-                <p class="text-sm text-slate-400">Partagez vos lancers de dés et vos suivis de session en direct par
-                    token.</p>
+        <!-- 1. APERÇU INTERACTIF DE L'APPLICATION -->
+        <section id="preview" class="scroll-mt-24">
+            <div
+                class="relative rounded-3xl p-[1px] bg-gradient-to-b from-amber-400/40 via-violet-500/25 to-white/5 shadow-[0_30px_90px_rgba(0,0,0,0.75)]">
+                <div class="rounded-[23px] bg-[#0b0d17]/90 backdrop-blur-2xl overflow-hidden">
+                    <!-- Barre de fenêtre macOS + sélecteur d'onglets -->
+                    <div
+                        class="flex flex-wrap items-center justify-between gap-4 px-5 py-3.5 border-b border-white/10 bg-white/[0.02]">
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-rose-500/80"></span>
+                            <span class="w-3 h-3 rounded-full bg-amber-400/80"></span>
+                            <span class="w-3 h-3 rounded-full bg-emerald-400/80"></span>
+                            <span class="ml-3 text-xs font-medium text-slate-400 hidden sm:inline">LoreKeeper Desktop —
+                                Les Ombres de Waterdeep</span>
+                        </div>
+
+                        <!-- Onglets interactifs -->
+                        <div class="flex items-center gap-1.5 bg-black/40 p-1 rounded-xl border border-white/10"
+                            role="tablist" aria-label="Aperçu des modules LoreKeeper">
+                            <button type="button" data-tab="combat"
+                                class="preview-tab px-3 py-1.5 rounded-lg text-xs font-semibold transition bg-amber-500/20 text-amber-300 border border-amber-400/30">
+                                ⚔️ Table &amp; Combat
+                            </button>
+                            <button type="button" data-tab="dice"
+                                class="preview-tab px-3 py-1.5 rounded-lg text-xs font-semibold transition text-slate-400 hover:text-slate-200 border border-transparent">
+                                🎲 Lancer de Dés
+                            </button>
+                            <button type="button" data-tab="ai"
+                                class="preview-tab px-3 py-1.5 rounded-lg text-xs font-semibold transition text-slate-400 hover:text-slate-200 border border-transparent">
+                                ✨ Co-MJ IA Locale
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Contenu de la fenêtre aperçu -->
+                    <div class="p-5 sm:p-8">
+                        <!-- TAB 1 : TABLE & COMBAT -->
+                        <div id="tab-combat" class="preview-panel grid lg:grid-cols-12 gap-6 items-stretch">
+                            <!-- Colonne scène & PNJ -->
+                            <div class="lg:col-span-7 space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs font-semibold uppercase tracking-wider text-amber-400/90">Scène
+                                        Active • Taverne du Dragon Assoupi</span>
+                                    <span
+                                        class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-rose-500/15 text-rose-300 border border-rose-500/30">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-rose-400 animate-ping"></span>
+                                        Combat Tour 2
+                                    </span>
+                                </div>
+
+                                <div class="space-y-2.5">
+                                    <!-- Personnage Joueur -->
+                                    <div
+                                        class="p-3.5 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-between gap-4">
+                                        <div>
+                                            <div class="flex items-center gap-2">
+                                                <span class="font-semibold text-sm text-slate-100">Lyraëlle (Elfe
+                                                    Rôdeuse)</span>
+                                                <span
+                                                    class="px-2 py-0.5 text-[10px] rounded-md bg-sky-500/15 text-sky-300 border border-sky-400/25">Concentrée</span>
+                                            </div>
+                                            <div
+                                                class="w-48 sm:w-64 h-1.5 bg-slate-800 rounded-full mt-2 overflow-hidden">
+                                                <div
+                                                    class="h-full bg-gradient-to-r from-emerald-500 to-teal-400 w-[82%]">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="text-right">
+                                            <span class="text-sm font-bold text-emerald-400">28 / 34 PV</span>
+                                            <p class="text-[11px] text-slate-500">CA 16 • Init 19</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Ennemi -->
+                                    <div
+                                        class="p-3.5 rounded-xl bg-rose-950/20 border border-rose-500/25 flex items-center justify-between gap-4">
+                                        <div>
+                                            <div class="flex items-center gap-2">
+                                                <span class="font-semibold text-sm text-slate-100">Capitaine
+                                                    Kragh (Chef Bandit)</span>
+                                                <span
+                                                    class="px-2 py-0.5 text-[10px] rounded-md bg-amber-500/15 text-amber-300 border border-amber-400/25">Empoisonné</span>
+                                            </div>
+                                            <div
+                                                class="w-48 sm:w-64 h-1.5 bg-slate-800 rounded-full mt-2 overflow-hidden">
+                                                <div
+                                                    class="h-full bg-gradient-to-r from-rose-600 to-orange-400 w-[41%]">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="text-right">
+                                            <span class="text-sm font-bold text-rose-400">19 / 46 PV</span>
+                                            <p class="text-[11px] text-slate-500">CA 15 • Init 14</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- PNJ Allié -->
+                                    <div
+                                        class="p-3.5 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-between gap-4">
+                                        <div>
+                                            <div class="flex items-center gap-2">
+                                                <span class="font-semibold text-sm text-slate-100">Balthazar
+                                                    l'Aubergiste</span>
+                                                <span
+                                                    class="px-2 py-0.5 text-[10px] rounded-md bg-violet-500/15 text-violet-300 border border-violet-400/25">PNJ
+                                                    Généré IA</span>
+                                            </div>
+                                            <div
+                                                class="w-48 sm:w-64 h-1.5 bg-slate-800 rounded-full mt-2 overflow-hidden">
+                                                <div class="h-full bg-emerald-500 w-full"></div>
+                                            </div>
+                                        </div>
+                                        <div class="text-right">
+                                            <span class="text-sm font-bold text-slate-300">12 / 12 PV</span>
+                                            <p class="text-[11px] text-slate-500">CA 10 • Init 8</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Colonne Whisper & Journal temps réel -->
+                            <div
+                                class="lg:col-span-5 rounded-2xl bg-black/35 border border-white/10 p-4 flex flex-col justify-between gap-4">
+                                <div>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <span class="text-xs font-semibold text-slate-300">🤫 Flux Whisper &amp;
+                                            Actions</span>
+                                        <span class="text-[11px] text-emerald-400">● WebSocket Local</span>
+                                    </div>
+                                    <div class="space-y-2.5 text-xs">
+                                        <div class="p-2.5 rounded-lg bg-violet-500/15 border border-violet-400/25">
+                                            <span class="font-semibold text-violet-300">Whisper MJ → Lyraëlle :</span>
+                                            <p class="text-slate-300 mt-0.5">« Tu remarques une chevalière gravée sous
+                                                la
+                                                cape du capitaine. »</p>
+                                        </div>
+                                        <div class="p-2.5 rounded-lg bg-white/[0.04] border border-white/10">
+                                            <span class="font-semibold text-amber-300">Thorgar :</span>
+                                            <span class="text-slate-300"> Lance 1d20+5 (Attaque) → <strong
+                                                    class="text-amber-300">22</strong></span>
+                                        </div>
+                                        <div class="p-2.5 rounded-lg bg-white/[0.04] border border-white/10">
+                                            <span class="font-semibold text-sky-300">Image partagée :</span>
+                                            <span class="text-slate-400">Plan des égouts affiché aux 4 joueurs.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div
+                                    class="text-[11px] text-slate-500 pt-2 border-t border-white/10 flex justify-between">
+                                    <span>Synchronisé sans serveur externe</span>
+                                    <span class="text-amber-400/80">Token : #LK-7842</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TAB 2 : LANCER DE DÉS INTERACTIF -->
+                        <div id="tab-dice" class="preview-panel hidden grid md:grid-cols-2 gap-6 items-center">
+                            <div
+                                class="p-6 rounded-2xl bg-gradient-to-br from-violet-950/50 via-[#0e1120] to-amber-950/20 border border-amber-400/25 text-center space-y-4">
+                                <p class="text-xs uppercase tracking-widest text-amber-300/80 font-semibold">Testez le
+                                    d20 en direct</p>
+                                <div id="demo-die-box"
+                                    class="w-24 h-24 mx-auto rounded-2xl bg-gradient-to-br from-amber-400/20 to-violet-600/25 border-2 border-amber-400/60 flex items-center justify-center shadow-[0_0_35px_rgba(212,175,55,0.25)]">
+                                    <span id="demo-die-value"
+                                        class="font-display text-4xl font-extrabold text-amber-300">20</span>
+                                </div>
+                                <p id="demo-die-label" class="text-sm font-semibold text-emerald-400">✨ Réussite
+                                    Critique
+                                    ! (+3 Modificateur = 23)</p>
+                                <button type="button" id="roll-demo-btn"
+                                    class="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs sm:text-sm transition shadow-lg">
+                                    🎲 Relancer le d20
+                                </button>
+                            </div>
+
+                            <div class="space-y-4 text-left">
+                                <h3 class="text-lg font-bold text-slate-100">Overlay 3D inspiré Baldur's Gate &amp;
+                                    Statistiques</h3>
+                                <p class="text-sm text-slate-400 leading-relaxed">
+                                    Chaque jet est diffusé en temps réel sur l'écran de tous les joueurs connectés à la
+                                    session, avec calcul automatique des modificateurs, critiques et graphiques
+                                    historiques par joueur.
+                                </p>
+                                <div class="grid grid-cols-3 gap-3 pt-1">
+                                    <div class="p-3 rounded-xl bg-white/[0.03] border border-white/10 text-center">
+                                        <div class="text-lg font-bold text-amber-300">11.4</div>
+                                        <div class="text-[11px] text-slate-400">Moyenne d20</div>
+                                    </div>
+                                    <div class="p-3 rounded-xl bg-white/[0.03] border border-white/10 text-center">
+                                        <div class="text-lg font-bold text-emerald-400">7</div>
+                                        <div class="text-[11px] text-slate-400">Nat 20</div>
+                                    </div>
+                                    <div class="p-3 rounded-xl bg-white/[0.03] border border-white/10 text-center">
+                                        <div class="text-lg font-bold text-rose-400">3</div>
+                                        <div class="text-[11px] text-slate-400">Échecs Crit.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TAB 3 : CO-MJ IA LOCALE -->
+                        <div id="tab-ai" class="preview-panel hidden grid md:grid-cols-2 gap-6 items-center">
+                            <div class="space-y-3 text-left">
+                                <span
+                                    class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-violet-500/15 text-violet-300 border border-violet-400/25">
+                                    🤖 Ollama • Exécution 100% Locale
+                                </span>
+                                <h3 class="text-lg font-bold text-slate-100">Un co-MJ réactif pendant la partie</h3>
+                                <p class="text-sm text-slate-400 leading-relaxed">
+                                    Vos joueurs décident soudainement d'entrer dans une boutique imprévue ? Générez un
+                                    PNJ complet avec stats D&amp;D, caractère et accroche de quête en quelques secondes,
+                                    ou résumez automatiquement vos notes Markdown en fin de séance.
+                                </p>
+                                <div class="flex flex-wrap gap-2 text-xs">
+                                    <span
+                                        class="px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-slate-300">Scénariste</span>
+                                    <span
+                                        class="px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-slate-300">Notes
+                                        Summarizer</span>
+                                    <span
+                                        class="px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-slate-300">Rule
+                                        Engine</span>
+                                </div>
+                            </div>
+
+                            <div class="p-4 rounded-2xl bg-black/45 border border-violet-400/25 space-y-3 text-left">
+                                <div class="text-xs text-slate-400 border-b border-white/10 pb-2">
+                                    Prompt MJ : <span class="text-slate-200">« Crée une alchimiste naine louche pour le
+                                        quartier des docks »</span>
+                                </div>
+                                <div class="space-y-1.5 text-xs">
+                                    <div class="font-bold text-amber-300">Morwenna "Fiole-Sombre" Brisepierre</div>
+                                    <p class="text-slate-300"><strong>PV :</strong> 27 • <strong>CA :</strong> 13 •
+                                        <strong>Alignement :</strong> Neutre
+                                    </p>
+                                    <p class="text-slate-400 leading-relaxed">Ancienne apothicaire bannie de la guilde,
+                                        elle vend des élixirs à bas prix... qui teintent légèrement les yeux de violet
+                                        pendant 24h.</p>
+                                </div>
+                                <div
+                                    class="flex items-center justify-between pt-2 border-t border-white/10 text-[11px]">
+                                    <span class="text-emerald-400">✓ Injecté dans la base SQLite</span>
+                                    <span class="text-slate-500">0 octet envoyé sur le cloud</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <!-- Conditions d'utilisation & Confidentialité -->
-        <div class="grid md:grid-cols-2 gap-8 pt-8 border-t border-slate-800/70">
-            <section id="terms" class="space-y-3">
-                <h2 class="text-xl font-bold text-slate-200">Conditions d'Utilisation</h2>
+        <!-- 2. BENTO GRID DES FONCTIONNALITÉS -->
+        <section id="features" class="scroll-mt-24 space-y-10">
+            <div class="text-center max-w-2xl mx-auto space-y-3">
+                <span class="text-xs font-bold uppercase tracking-[0.2em] text-amber-400">Arsenal du Maître du
+                    Jeu</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-100">
+                    Tout ce qu'il faut autour de la table.
+                </h2>
+                <p class="text-sm sm:text-base text-slate-400">
+                    Conçu pour rester fluide pendant la partie, fiable même sans connexion internet et respectueux de
+                    vos
+                    histoires.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-6 gap-5">
+                <!-- Grande Carte 1 -->
+                <article class="bento-card md:col-span-3 rounded-2xl p-7 flex flex-col justify-between gap-5">
+                    <div>
+                        <div
+                            class="w-11 h-11 rounded-xl bg-emerald-500/15 border border-emerald-400/30 flex items-center justify-center text-emerald-300 mb-5">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <ellipse cx="12" cy="5" rx="9" ry="3" />
+                                <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" />
+                                <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-100 mb-2">100 % Hors-ligne &amp; Local-First</h3>
+                        <p class="text-sm text-slate-400 leading-relaxed">
+                            Vos campagnes, fiches, notes et historiques vivent dans une base SQLite embarquée sur votre
+                            machine. Un trousseau local SHA-256 permet même de vous reconnecter sans accès internet.
+                        </p>
+                    </div>
+                    <div class="flex flex-wrap gap-2 text-[11px] font-medium text-emerald-300/90">
+                        <span class="px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/20">SQLite
+                            embarquée</span>
+                        <span class="px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/20">Zéro
+                            télémétrie</span>
+                    </div>
+                </article>
+
+                <!-- Grande Carte 2 -->
+                <article class="bento-card md:col-span-3 rounded-2xl p-7 flex flex-col justify-between gap-5">
+                    <div>
+                        <div
+                            class="w-11 h-11 rounded-xl bg-violet-500/15 border border-violet-400/30 flex items-center justify-center text-violet-300 mb-5">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path
+                                    d="M12 3l1.912 5.813a2 2 0 0 0 1.275 1.275L21 12l-5.813 1.912a2 2 0 0 0-1.275 1.275L12 21l-1.912-5.813a2 2 0 0 0-1.275-1.275L3 12l5.813-1.912a2 2 0 0 0 1.275-1.275L12 3z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-100 mb-2">Assisté par IA Locale (Ollama)</h3>
+                        <p class="text-sm text-slate-400 leading-relaxed">
+                            Générez des PNJ, ennemis et scénarios à la volée avec Ollama (Mistral) sans dépendre d'une
+                            API payante. Résumez vos notes Markdown de session grâce aux sous-agents dédiés.
+                        </p>
+                    </div>
+                    <div class="flex flex-wrap gap-2 text-[11px] font-medium text-violet-300/90">
+                        <span class="px-2.5 py-1 rounded-lg bg-violet-500/10 border border-violet-500/20">PNJ &amp;
+                            Scénarios IA</span>
+                        <span class="px-2.5 py-1 rounded-lg bg-violet-500/10 border border-violet-500/20">Résumé
+                            Markdown</span>
+                    </div>
+                </article>
+
+                <!-- Petite Carte 3 -->
+                <article class="bento-card md:col-span-2 rounded-2xl p-6 space-y-3">
+                    <div
+                        class="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-400/30 flex items-center justify-center text-amber-300">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                            <circle cx="9" cy="7" r="4" />
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-100">Multijoueur Local</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">
+                        Partagez vos lancers de dés, vos images de scène et vos suivis de session en direct par simple
+                        token d'invitation.
+                    </p>
+                </article>
+
+                <!-- Petite Carte 4 -->
+                <article class="bento-card md:col-span-2 rounded-2xl p-6 space-y-3">
+                    <div
+                        class="w-10 h-10 rounded-xl bg-rose-500/15 border border-rose-400/30 flex items-center justify-center text-rose-300">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5" />
+                            <line x1="13" y1="19" x2="19" y2="13" />
+                            <line x1="16" y1="16" x2="20" y2="20" />
+                            <line x1="19" y1="21" x2="21" y2="19" />
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-100">Combat &amp; États D&amp;D 5e</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">
+                        Suivez les PV, l'initiative et les effets d'état simultanés avec gestion automatique des règles
+                        d'exclusion.
+                    </p>
+                </article>
+
+                <!-- Petite Carte 5 -->
+                <article class="bento-card md:col-span-2 rounded-2xl p-6 space-y-3">
+                    <div
+                        class="w-10 h-10 rounded-xl bg-sky-500/15 border border-sky-400/30 flex items-center justify-center text-sky-300">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-100">Mode Whisper &amp; Book</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">
+                        Glissez des secrets en privé aux joueurs ciblés et publiez un <em>Campaign Book</em> Markdown
+                        commun.
+                    </p>
+                </article>
+            </div>
+        </section>
+
+        <!-- 3. COMPTE UNIFIÉ : POUR LE MJ & POUR LES JOUEURS -->
+        <section id="roles" class="scroll-mt-24 grid md:grid-cols-2 gap-6">
+            <div class="bento-card rounded-2xl p-7 space-y-4">
+                <div class="flex items-center justify-between">
+                    <span
+                        class="px-3 py-1 rounded-full text-xs font-bold bg-amber-500/15 text-amber-300 border border-amber-400/30">
+                        👑 Pour le Maître du Jeu
+                    </span>
+                    <span class="text-xs text-slate-500">Préparation &amp; Maîtrise</span>
+                </div>
+                <h3 class="text-2xl font-bold text-slate-100">Gardez une longueur d'avance sur le groupe</h3>
+                <ul class="space-y-2.5 text-sm text-slate-300">
+                    <li class="flex items-start gap-2.5">
+                        <span class="text-amber-400 mt-0.5">✦</span>
+                        <span>Rédigez vos scénarios et documents de suivi PJ en Markdown enrichi.</span>
+                    </li>
+                    <li class="flex items-start gap-2.5">
+                        <span class="text-amber-400 mt-0.5">✦</span>
+                        <span>Déclenchez l'ambiance combat et contrôlez les rencontres en un clic.</span>
+                    </li>
+                    <li class="flex items-start gap-2.5">
+                        <span class="text-amber-400 mt-0.5">✦</span>
+                        <span>Partagez plans et illustrations directement sur l'écran de vos joueurs.</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="bento-card rounded-2xl p-7 space-y-4">
+                <div class="flex items-center justify-between">
+                    <span
+                        class="px-3 py-1 rounded-full text-xs font-bold bg-violet-500/15 text-violet-300 border border-violet-400/30">
+                        🛡️ Pour les Joueurs
+                    </span>
+                    <span class="text-xs text-slate-500">Immersion &amp; Fluidité</span>
+                </div>
+                <h3 class="text-2xl font-bold text-slate-100">Un seul profil, toutes vos aventures</h3>
+                <ul class="space-y-2.5 text-sm text-slate-300">
+                    <li class="flex items-start gap-2.5">
+                        <span class="text-violet-400 mt-0.5">✦</span>
+                        <span>Connexion unifiée (Discord / Google) avec mode hors-ligne automatique.</span>
+                    </li>
+                    <li class="flex items-start gap-2.5">
+                        <span class="text-violet-400 mt-0.5">✦</span>
+                        <span>Suivi de personnage, inventaire, sorts, PV et notes personnelles en session.</span>
+                    </li>
+                    <li class="flex items-start gap-2.5">
+                        <span class="text-violet-400 mt-0.5">✦</span>
+                        <span>Rejoignez la table depuis le Lobby et accédez au salon vocal Discord d'un clic.</span>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 4. BANNIÈRE CTA FINALE -->
+        <section
+            class="relative overflow-hidden rounded-3xl p-8 sm:p-12 text-center bg-gradient-to-br from-violet-950/60 via-[#121526]/90 to-amber-950/40 border border-amber-400/30 backdrop-blur-xl shadow-2xl">
+            <div class="max-w-2xl mx-auto space-y-6">
+                <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-slate-100">
+                    Prêt à lancer la prochaine campagne ?
+                </h2>
+                <p class="text-sm sm:text-base text-slate-300">
+                    Téléchargez gratuitement LoreKeeper pour macOS ou Windows, ou soutenez son développement indépendant
+                    en offrant une bière à la taverne.
+                </p>
+                <div class="flex flex-wrap justify-center gap-4 pt-2">
+                    <a href="https://github.com/superfeedboy/lorekeeper-desktop/releases/latest"
+                        class="px-7 py-3.5 rounded-2xl bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-bold text-sm shadow-[0_8px_30px_rgba(212,175,55,0.35)] hover:brightness-110 transition">
+                        Télécharger la dernière version
+                    </a>
+                    <a href="https://ko-fi.com/lorekeeperjdr" target="_blank" rel="noopener noreferrer"
+                        class="px-6 py-3.5 rounded-2xl bg-pink-600/80 hover:bg-pink-500 text-white font-semibold text-sm shadow-lg transition">
+                        🍺 M'offrir une bière sur Ko-fi
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. CONDITIONS D'UTILISATION & CONFIDENTIALITÉ -->
+        <div class="grid md:grid-cols-2 gap-6 pt-4">
+            <section id="terms" class="bento-card scroll-mt-24 rounded-2xl p-6 space-y-3">
+                <h2 class="text-lg font-bold text-slate-100 flex items-center gap-2">
+                    <span class="text-amber-400">§</span>
+                    <span>Conditions d'Utilisation</span>
+                </h2>
                 <p class="text-sm text-slate-400 leading-relaxed">
-                    LoreKeeper est un logiciel libre mis à disposition "tel quel", sans garantie d'aucune sorte. Vous
+                    LoreKeeper est un logiciel libre mis à disposition « tel quel », sans garantie d'aucune sorte. Vous
                     êtes libres de l'utiliser pour vos parties de jeux de rôle personnelles ou associatives.
                     L'utilisation des modèles d'IA locaux se fait sous votre entière responsabilité matérielle.
                 </p>
             </section>
 
-            <section id="privacy" class="space-y-3">
-                <h2 class="text-xl font-bold text-slate-200">Règles de Confidentialité</h2>
+            <section id="privacy" class="bento-card scroll-mt-24 rounded-2xl p-6 space-y-3">
+                <h2 class="text-lg font-bold text-slate-100 flex items-center gap-2">
+                    <span class="text-emerald-400">🔒</span>
+                    <span>Règles de Confidentialité</span>
+                </h2>
                 <p class="text-sm text-slate-400 leading-relaxed">
                     Aucune donnée personnelle n'est collectée, stockée ou revendue sur des serveurs distants. Tout est
                     stocké localement sur votre machine dans votre base de données SQLite. Vos campagnes et vos notes
-                    vous appartiennent à 100%.
+                    vous appartiennent à 100 %.
                 </p>
             </section>
         </div>
 
     </main>
 
-    <!-- Pied de page -->
-    <footer class="relative z-10 text-center py-8 text-xs text-slate-500 border-t border-slate-800/70 mt-12">
-        <p>&copy; 2026 LoreKeeper. Fait avec passion pour les passionnés de JDR.</p>
+    <!-- =========================================================
+         PIED DE PAGE
+         ========================================================= -->
+    <footer class="relative z-10 border-t border-white/10 bg-black/25 backdrop-blur-md">
+        <div
+            class="max-w-6xl mx-auto px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+            <div class="flex items-center gap-2.5">
+                <img src="lorekeeper-logo-alpha.png" alt="" class="w-5 h-5 object-contain opacity-85">
+                <span>&copy; 2026 LoreKeeper. Fait avec passion pour les passionnés de JDR.</span>
+            </div>
+            <div class="flex items-center gap-5">
+                <a href="https://github.com/superfeedboy/lorekeeper-desktop/releases/latest"
+                    class="hover:text-amber-300 transition-colors">Releases GitHub</a>
+                <a href="#terms" class="hover:text-amber-300 transition-colors">Conditions</a>
+                <a href="#privacy" class="hover:text-amber-300 transition-colors">Confidentialité</a>
+                <a href="https://ko-fi.com/lorekeeperjdr" target="_blank" rel="noopener noreferrer"
+                    class="hover:text-pink-300 transition-colors">Ko-fi</a>
+            </div>
+        </div>
     </footer>
+
+    <!-- Interactions légères (Spotlight Bento + Onglets Aperçu + Dé d20 interactif) -->
+    <script>
+        // Effet spotlight au survol des cartes Bento
+        document.querySelectorAll('.bento-card').forEach((card) => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+                card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+            });
+        });
+
+        // Sélecteur d'onglets de l'aperçu interactif
+        const tabs = document.querySelectorAll('.preview-tab');
+        const panels = document.querySelectorAll('.preview-panel');
+
+        tabs.forEach((tab) => {
+            tab.addEventListener('click', () => {
+                const target = tab.getAttribute('data-tab');
+
+                tabs.forEach((t) => {
+                    t.classList.remove('bg-amber-500/20', 'text-amber-300', 'border-amber-400/30');
+                    t.classList.add('text-slate-400', 'border-transparent');
+                });
+                tab.classList.add('bg-amber-500/20', 'text-amber-300', 'border-amber-400/30');
+                tab.classList.remove('text-slate-400', 'border-transparent');
+
+                panels.forEach((panel) => {
+                    if (panel.id === `tab-${target}`) {
+                        panel.classList.remove('hidden');
+                    } else {
+                        panel.classList.add('hidden');
+                    }
+                });
+            });
+        });
+
+        // Mini lancer de d20 interactif dans l'onglet Dés
+        const rollBtn = document.getElementById('roll-demo-btn');
+        const dieBox = document.getElementById('demo-die-box');
+        const dieValue = document.getElementById('demo-die-value');
+        const dieLabel = document.getElementById('demo-die-label');
+
+        if (rollBtn && dieBox && dieValue && dieLabel) {
+            rollBtn.addEventListener('click', () => {
+                dieBox.classList.remove('dice-rolling');
+                void dieBox.offsetWidth;
+                dieBox.classList.add('dice-rolling');
+
+                const roll = Math.floor(Math.random() * 20) + 1;
+                const total = roll + 3;
+                dieValue.textContent = String(roll);
+
+                dieLabel.className = 'text-sm font-semibold';
+                if (roll === 20) {
+                    dieLabel.classList.add('text-emerald-400');
+                    dieLabel.textContent = `✨ Réussite Critique ! (+3 Modificateur = ${total})`;
+                } else if (roll === 1) {
+                    dieLabel.classList.add('text-rose-400');
+                    dieLabel.textContent = `💀 Échec Critique ! (+3 Modificateur = ${total})`;
+                } else {
+                    dieLabel.classList.add('text-amber-300');
+                    dieLabel.textContent = `🎲 Jet : ${roll} (+3 Modificateur = ${total})`;
+                }
+            });
+        }
+    </script>
 
 </body>
 
