@@ -427,11 +427,7 @@
 
         <div id="protocolNotice" class="notice-box">
             <strong>L’application ne s’est pas ouverte automatiquement ?</strong><br />
-            • Si vous utilisez la version <strong>développement (<code>npx tauri dev</code>)</strong>, macOS
-            n’enregistre le lien <code>lorekeeper://</code> qu’après installation du bundle
-            <code>LoreKeeper.app</code>.<br />
-            • Solution immédiate : cliquez sur <strong>« Copier le lien »</strong> ci-dessus, puis collez-le dans
-            <em>LoreKeeper → Hub → Rejoindre une Partie</em>.
+            Cliquez sur « Copier le lien » ci-dessus, puis collez-le dans LoreKeeper → Hub → Rejoindre une Partie.
         </div>
 
         <div class="divider-row">Pas encore installé ?</div>
@@ -495,7 +491,6 @@
             if (params.get('s') || params.get('t')) {
                 setTimeout(function () {
                     window.location.href = deepLink;
-                    checkIfAppOpened();
                 }, 180);
             }
         })();
