@@ -5,9 +5,27 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>LoreKeeper — Rejoindre la table</title>
+    <link rel="icon" type="image/png" href="./lorekeeper-logo-alpha.png" />
     <style>
         :root {
             color-scheme: dark;
+            --bg-primary: #0f111a;
+            --bg-secondary: #181b28;
+            --bg-card: #212536;
+            --accent-gold: #d4af37;
+            --accent-gold-hover: #e5c351;
+            --accent-purple: #8b5cf6;
+            --accent-green: #10b981;
+            --text-primary: #f3f4f6;
+            --text-secondary: #cbd5e1;
+            --text-muted: #9ca3af;
+            --border-subtle: rgba(255, 255, 255, 0.1);
+            --border-gold: rgba(212, 175, 55, 0.48);
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
         }
 
         body {
@@ -16,95 +34,418 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: radial-gradient(circle at top, #172038, #090d16 70%);
-            color: #f8fafc;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            padding: 24px;
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            background:
+                radial-gradient(circle at 20% 20%, rgba(124, 58, 237, 0.24), transparent 45%),
+                radial-gradient(circle at 80% 80%, rgba(212, 175, 55, 0.16), transparent 45%),
+                linear-gradient(135deg, #090b12 0%, #141726 52%, #0d1019 100%);
+            background-size: 160% 160%;
+            animation: bgGradientPulse 14s ease-in-out infinite alternate;
         }
 
-        .card {
-            max-width: 460px;
+        @keyframes bgGradientPulse {
+            0% {
+                background-position: 0% 20%;
+            }
+
+            100% {
+                background-position: 100% 80%;
+            }
+        }
+
+        .glow-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(85px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .orb-1 {
+            width: 390px;
+            height: 390px;
+            background: #7c3aed;
+            top: -90px;
+            left: -70px;
+            opacity: 0.45;
+            animation: floatOrb1 11s ease-in-out infinite alternate;
+        }
+
+        .orb-2 {
+            width: 350px;
+            height: 350px;
+            background: #d4af37;
+            bottom: -95px;
+            right: -70px;
+            opacity: 0.3;
+            animation: floatOrb2 13s ease-in-out infinite alternate;
+        }
+
+        .orb-3 {
+            width: 260px;
+            height: 260px;
+            background: #3b82f6;
+            top: 45%;
+            left: 65%;
+            opacity: 0.2;
+            animation: floatOrb3 9s ease-in-out infinite alternate;
+        }
+
+        @keyframes floatOrb1 {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            100% {
+                transform: translate(90px, 60px) scale(1.18);
+            }
+        }
+
+        @keyframes floatOrb2 {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            100% {
+                transform: translate(-85px, -65px) scale(1.2);
+            }
+        }
+
+        @keyframes floatOrb3 {
+            0% {
+                transform: translate(0, 0) scale(0.9);
+            }
+
+            100% {
+                transform: translate(-100px, 45px) scale(1.15);
+            }
+        }
+
+        .particles-layer {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .arcane-particle {
+            position: absolute;
+            bottom: -30px;
+            color: rgba(212, 175, 55, 0.55);
+            filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.7));
+            animation: floatParticle linear infinite;
+        }
+
+        @keyframes floatParticle {
+            0% {
+                transform: translateY(0) rotate(0deg) scale(0.8);
+                opacity: 0;
+            }
+
+            20% {
+                opacity: 0.75;
+            }
+
+            80% {
+                opacity: 0.65;
+            }
+
+            100% {
+                transform: translateY(-95vh) rotate(360deg) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        .join-card {
+            position: relative;
+            z-index: 2;
             width: 100%;
-            background: rgba(15, 23, 42, 0.9);
-            border: 1px solid rgba(212, 175, 55, 0.45);
-            border-radius: 18px;
-            padding: 28px;
+            max-width: 520px;
+            background: rgba(20, 23, 36, 0.88);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-gold);
+            border-radius: 24px;
+            padding: 34px 30px 28px;
             text-align: center;
-            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65);
+            box-shadow: 0 25px 65px rgba(0, 0, 0, 0.72), 0 0 50px rgba(124, 58, 237, 0.24);
+            animation: cardEntrance 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes cardEntrance {
+            from {
+                opacity: 0;
+                transform: translateY(18px) scale(0.97);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .logo-halo-wrapper {
+            position: relative;
+            width: 112px;
+            height: 112px;
+            margin: 0 auto 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-aura-ring {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 1.5px dashed rgba(212, 175, 55, 0.52);
+            box-shadow: 0 0 28px rgba(124, 58, 237, 0.42), inset 0 0 18px rgba(212, 175, 55, 0.22);
+            animation: spinRing 22s linear infinite;
+        }
+
+        @keyframes spinRing {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .logo-img {
+            width: 92px;
+            height: 92px;
+            object-fit: contain;
+            display: block;
+            filter: drop-shadow(0 8px 22px rgba(212, 175, 55, 0.45));
+            animation: logoFloat 4.2s ease-in-out infinite alternate;
+        }
+
+        .logo-fallback {
+            display: none;
+            font-size: 2.8rem;
+            filter: drop-shadow(0 8px 22px rgba(212, 175, 55, 0.45));
+        }
+
+        @keyframes logoFloat {
+            0% {
+                transform: translateY(-3px) scale(0.99);
+            }
+
+            100% {
+                transform: translateY(4px) scale(1.03);
+            }
         }
 
         h1 {
             margin: 0 0 8px;
-            font-size: 1.45rem;
-            color: #fde68a;
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--accent-gold);
+            letter-spacing: 0.3px;
         }
 
-        p {
+        .subtitle {
             margin: 0 0 18px;
-            color: #cbd5e1;
-            font-size: 0.92rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
             line-height: 1.5;
         }
 
-        .token-pill {
-            display: inline-block;
-            padding: 6px 14px;
+        .session-meta-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 15px;
             border-radius: 999px;
-            background: rgba(56, 189, 248, 0.14);
-            border: 1px solid rgba(56, 189, 248, 0.4);
-            color: #bae6fd;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.14), rgba(124, 58, 237, 0.2));
+            border: 1px solid rgba(212, 175, 55, 0.45);
+            color: #fef3c7;
             font-weight: 700;
             font-size: 0.85rem;
-            margin-bottom: 18px;
+            margin-bottom: 20px;
+        }
+
+        .session-meta-pill code {
+            color: #93c5fd;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 0.86rem;
+        }
+
+        .actions-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
         .btn {
-            display: block;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
             width: 100%;
-            box-sizing: border-box;
-            padding: 12px 16px;
-            border-radius: 10px;
-            font-weight: 800;
+            padding: 13px 16px;
+            border-radius: 12px;
+            font-weight: 700;
             font-size: 0.92rem;
             text-decoration: none;
             cursor: pointer;
             border: none;
-            margin-bottom: 10px;
+            transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease, border-color 0.16s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
         }
 
         .btn-gold {
-            background: linear-gradient(135deg, #d4af37, #b48a1e);
-            color: #090d16;
+            background: linear-gradient(135deg, #d4af37, #b98e1b);
+            color: #090b12;
+            font-weight: 800;
+            box-shadow: 0 8px 24px rgba(212, 175, 55, 0.28);
         }
 
-        .btn-outline {
-            background: rgba(30, 41, 59, 0.75);
-            color: #e2e8f0;
-            border: 1px solid rgba(148, 163, 184, 0.3);
+        .btn-gold:hover {
+            background: linear-gradient(135deg, #e5c351, #c99d24);
+            box-shadow: 0 10px 28px rgba(212, 175, 55, 0.42);
+        }
+
+        .btn-glass {
+            background: rgba(33, 37, 54, 0.82);
+            color: var(--text-primary);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .btn-glass:hover {
+            background: rgba(44, 49, 71, 0.94);
+            border-color: rgba(212, 175, 55, 0.42);
+        }
+
+        .btn-glass.copied {
+            border-color: rgba(16, 185, 129, 0.6);
+            color: #6ee7b7;
+        }
+
+        .notice-box {
+            display: none;
+            margin-top: 16px;
+            padding: 12px 14px;
+            border-radius: 12px;
+            background: rgba(245, 158, 11, 0.12);
+            border: 1px solid rgba(245, 158, 11, 0.4);
+            color: #fde68a;
+            font-size: 0.82rem;
+            line-height: 1.48;
+            text-align: left;
+        }
+
+        .notice-box.visible {
+            display: block;
         }
 
         .hint {
-            margin-top: 12px;
+            margin: 16px 0 0;
             font-size: 0.78rem;
-            color: #94a3b8;
+            color: var(--text-muted);
+            line-height: 1.45;
+        }
+
+        .divider-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 18px 0 12px;
+            font-size: 0.74rem;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .divider-row::before,
+        .divider-row::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
         }
     </style>
 </head>
 
 <body>
-    <div class="card">
-        <h1>🎲 Invitation LoreKeeper</h1>
-        <p>Ouverture automatique de votre application LoreKeeper pour rejoindre le lobby du Maître du Jeu...</p>
-        <div id="tokenBadge" class="token-pill" style="display: none;"></div>
-        <a id="openAppBtn" class="btn btn-gold" href="#">🚀 Ouvrir LoreKeeper maintenant</a>
-        <button id="copyBtn" class="btn btn-outline" type="button">📋 Copier le lien pour le coller dans l'app</button>
-        <a class="btn btn-outline" href="https://github.com/superfeedboy/lorekeeper/releases/latest" target="_blank"
-            rel="noopener">
-            ⬇️ Télécharger LoreKeeper
-        </a>
-        <p class="hint" id="statusHint">Si l'application ne s'ouvre pas automatiquement, cliquez sur « Ouvrir LoreKeeper
-            maintenant » ou collez le lien dans Hub → Rejoindre une Partie.</p>
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+    <div class="glow-orb orb-3"></div>
+
+    <div class="particles-layer" aria-hidden="true">
+        <span class="arcane-particle"
+            style="left: 12%; font-size: 8px; animation-duration: 11s; animation-delay: 0s">✦</span>
+        <span class="arcane-particle"
+            style="left: 26%; font-size: 11px; animation-duration: 14s; animation-delay: 2s">🎲</span>
+        <span class="arcane-particle"
+            style="left: 44%; font-size: 8px; animation-duration: 10s; animation-delay: 3.5s">✧</span>
+        <span class="arcane-particle"
+            style="left: 62%; font-size: 10px; animation-duration: 13s; animation-delay: 1s">⚔️</span>
+        <span class="arcane-particle"
+            style="left: 78%; font-size: 8px; animation-duration: 12s; animation-delay: 2.5s">✦</span>
+        <span class="arcane-particle"
+            style="left: 90%; font-size: 11px; animation-duration: 15s; animation-delay: 1.5s">✨</span>
     </div>
+
+    <main class="join-card">
+        <div class="logo-halo-wrapper">
+            <div class="logo-aura-ring"></div>
+            <img src="./lorekeeper-logo-alpha.png" alt="LoreKeeper" class="logo-img"
+                onerror="if(!this.dataset.retried){this.dataset.retried='1';this.src='/lorekeeper/lorekeeper-logo-alpha.png';return;}this.style.display='none';document.getElementById('logoFallback').style.display='block';" />
+            <span id="logoFallback" class="logo-fallback">🐉</span>
+        </div>
+
+        <h1>Rejoindre la Table</h1>
+        <p class="subtitle">
+            Votre Maître du Jeu vous attend sur <strong>LoreKeeper</strong>. Ouvrez l’application bureau pour rejoindre
+            le lobby en temps réel.
+        </p>
+
+        <div id="tokenBadge" class="session-meta-pill" style="display: none;">
+            <span>🔑 Code de table :</span>
+            <code id="tokenText"></code>
+        </div>
+
+        <div class="actions-stack">
+            <a id="openAppBtn" class="btn btn-gold" href="#">
+                🚀 Ouvrir LoreKeeper
+            </a>
+            <button id="copyBtn" class="btn btn-glass" type="button">
+                📋 Copier le lien pour le coller dans l’app
+            </button>
+        </div>
+
+        <div id="protocolNotice" class="notice-box">
+            <strong>L’application ne s’est pas ouverte automatiquement ?</strong><br />
+            • Si vous utilisez la version <strong>développement (<code>npx tauri dev</code>)</strong>, macOS
+            n’enregistre le lien <code>lorekeeper://</code> qu’après installation du bundle
+            <code>LoreKeeper.app</code>.<br />
+            • Solution immédiate : cliquez sur <strong>« Copier le lien »</strong> ci-dessus, puis collez-le dans
+            <em>LoreKeeper → Hub → Rejoindre une Partie</em>.
+        </div>
+
+        <div class="divider-row">Pas encore installé ?</div>
+
+        <a class="btn btn-glass" href="https://github.com/superfeedboy/lorekeeper/releases/latest" target="_blank"
+            rel="noopener">
+            ⬇️ Télécharger LoreKeeper Desktop
+        </a>
+
+        <p class="hint">
+            Vos jets de dés, cartes tactiques et fiches de personnages seront synchronisés automatiquement avec le
+            Maître du Jeu.
+        </p>
+    </main>
 
     <script>
         (function () {
@@ -114,19 +455,39 @@
             var deepLink = 'lorekeeper://join' + qs;
 
             var badge = document.getElementById('tokenBadge');
+            var tokenText = document.getElementById('tokenText');
             if (token) {
-                badge.textContent = 'Table : ' + token;
-                badge.style.display = 'inline-block';
+                tokenText.textContent = token;
+                badge.style.display = 'inline-flex';
             }
 
             var openBtn = document.getElementById('openAppBtn');
+            var copyBtn = document.getElementById('copyBtn');
+            var notice = document.getElementById('protocolNotice');
             openBtn.href = deepLink;
 
-            document.getElementById('copyBtn').addEventListener('click', function () {
+            function checkIfAppOpened() {
+                setTimeout(function () {
+                    if (document.visibilityState === 'visible') {
+                        notice.classList.add('visible');
+                    }
+                }, 1250);
+            }
+
+            openBtn.addEventListener('click', function () {
+                checkIfAppOpened();
+            });
+
+            copyBtn.addEventListener('click', function () {
                 var full = window.location.href;
                 if (navigator.clipboard && navigator.clipboard.writeText) {
                     navigator.clipboard.writeText(full).then(function () {
-                        document.getElementById('copyBtn').textContent = '✅ Lien copié ! Colle-le dans LoreKeeper';
+                        copyBtn.classList.add('copied');
+                        copyBtn.textContent = '✅ Lien copié ! Colle-le dans LoreKeeper → Rejoindre';
+                        setTimeout(function () {
+                            copyBtn.classList.remove('copied');
+                            copyBtn.textContent = '📋 Copier le lien pour le coller dans l’app';
+                        }, 3000);
                     });
                 }
             });
@@ -134,7 +495,8 @@
             if (params.get('s') || params.get('t')) {
                 setTimeout(function () {
                     window.location.href = deepLink;
-                }, 150);
+                    checkIfAppOpened();
+                }, 180);
             }
         })();
     </script>
