@@ -299,14 +299,42 @@
             animation: diceShake 0.42s ease-in-out;
         }
 
+        /* Révélation fluide au scroll */
+        .reveal-on-scroll {
+            opacity: 0;
+            transform: translateY(18px);
+            transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1), transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .reveal-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Barres égaliseur pour la banque sonore interactive */
+        @keyframes eqBounce {
+            0%, 100% { transform: scaleY(0.3); }
+            50% { transform: scaleY(1); }
+        }
+
+        .eq-bar {
+            transform-origin: bottom;
+            animation: eqBounce 0.9s ease-in-out infinite;
+        }
+
         @media (prefers-reduced-motion: reduce) {
 
             .arcane-bg,
             .auth-glow-orb,
             .arcane-particle,
             .logo-aura-ring,
-            .hero-logo-img {
+            .hero-logo-img,
+            .eq-bar {
                 animation: none !important;
+            }
+            .reveal-on-scroll {
+                opacity: 1 !important;
+                transform: none !important;
             }
         }
     </style>
@@ -353,10 +381,11 @@
                 </div>
             </a>
 
-            <div class="hidden md:flex items-center gap-7 text-sm font-medium text-slate-300">
+            <div class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-300">
                 <a href="#preview" class="hover:text-amber-300 transition-colors">Aperçu</a>
                 <a href="#features" class="hover:text-amber-300 transition-colors">Fonctionnalités</a>
                 <a href="#roles" class="hover:text-amber-300 transition-colors">MJ &amp; Joueurs</a>
+                <a href="#specs" class="hover:text-amber-300 transition-colors">Configuration</a>
                 <a href="#privacy" class="hover:text-amber-300 transition-colors">Confidentialité</a>
             </div>
 
@@ -423,13 +452,21 @@
             </a>
 
             <a href="https://github.com/superfeedboy/lorekeeper/releases/latest"
-                class="inline-flex items-center gap-3 px-7 py-3.5 rounded-2xl bg-slate-900/80 hover:bg-slate-800/90 backdrop-blur-md border border-white/15 hover:border-amber-400/40 text-slate-100 font-bold text-sm sm:text-base shadow-xl hover:-translate-y-0.5 transition-all">
+                class="inline-flex items-center gap-3 px-6 py-3.5 rounded-2xl bg-slate-900/80 hover:bg-slate-800/90 backdrop-blur-md border border-white/15 hover:border-amber-400/40 text-slate-100 font-bold text-sm sm:text-base shadow-xl hover:-translate-y-0.5 transition-all">
                 <!-- Windows Icon -->
                 <svg class="w-4 h-4 text-sky-400" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                     <path
                         d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801" />
                 </svg>
-                <span>Télécharger pour Windows</span>
+                <span>Windows</span>
+            </a>
+
+            <a href="https://github.com/superfeedboy/lorekeeper/releases/latest"
+                class="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-2xl bg-emerald-950/60 hover:bg-emerald-900/70 backdrop-blur-md border border-emerald-400/30 hover:border-emerald-300/60 text-emerald-100 font-bold text-sm sm:text-base shadow-xl hover:-translate-y-0.5 transition-all">
+                <svg class="w-4 h-4 text-emerald-400" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M17.6 9.48l1.84-3.18c.16-.31.04-.69-.26-.85-.29-.15-.65-.06-.83.22l-1.88 3.24a11.43 11.43 0 0 0-8.94 0L5.65 5.67c-.19-.28-.54-.37-.83-.22-.3.16-.42.54-.26.85l1.84 3.18C2.92 11.03 1 14.22 1 18h22c0-3.78-1.92-6.97-5.4-8.52zM7 15.25a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5zm10 0a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5z"/>
+                </svg>
+                <span>Compagnon Android (APK)</span>
             </a>
 
             <a href="https://ko-fi.com/lorekeeperjdr" target="_blank" rel="noopener noreferrer"
@@ -447,15 +484,15 @@
             </div>
             <div class="flex items-center gap-2">
                 <span class="text-violet-400">●</span>
-                <span>IA Ollama (Mistral)</span>
+                <span>IA Locale (Ollama) &amp; Cloud</span>
             </div>
             <div class="flex items-center gap-2">
                 <span class="text-amber-400">●</span>
-                <span>Règles &amp; États D&amp;D 5e</span>
+                <span>Dés 3D &amp; Banque Sonore</span>
             </div>
             <div class="flex items-center gap-2">
                 <span class="text-sky-400">●</span>
-                <span>Multijoueur local par token</span>
+                <span>LAN &amp; Compagnon Android</span>
             </div>
         </div>
     </header>
@@ -492,7 +529,7 @@
                         </div>
 
                         <!-- Onglets interactifs -->
-                        <div class="flex items-center gap-1.5 bg-black/40 p-1 rounded-xl border border-white/10"
+                        <div class="flex flex-wrap items-center gap-1.5 bg-black/40 p-1 rounded-xl border border-white/10"
                             role="tablist" aria-label="Aperçu des modules LoreKeeper">
                             <button type="button" data-tab="combat"
                                 class="preview-tab px-3 py-1.5 rounded-lg text-xs font-semibold transition bg-amber-500/20 text-amber-300 border border-amber-400/30">
@@ -500,11 +537,15 @@
                             </button>
                             <button type="button" data-tab="dice"
                                 class="preview-tab px-3 py-1.5 rounded-lg text-xs font-semibold transition text-slate-400 hover:text-slate-200 border border-transparent">
-                                🎲 Lancer de Dés
+                                🎲 Dés 3D
+                            </button>
+                            <button type="button" data-tab="sound"
+                                class="preview-tab px-3 py-1.5 rounded-lg text-xs font-semibold transition text-slate-400 hover:text-slate-200 border border-transparent">
+                                🔊 Soundboard
                             </button>
                             <button type="button" data-tab="ai"
                                 class="preview-tab px-3 py-1.5 rounded-lg text-xs font-semibold transition text-slate-400 hover:text-slate-200 border border-transparent">
-                                ✨ Co-MJ IA Locale
+                                ✨ Co-MJ IA
                             </button>
                         </div>
                     </div>
@@ -512,93 +553,99 @@
                     <!-- Contenu de la fenêtre aperçu -->
                     <div class="p-5 sm:p-8">
                         <!-- TAB 1 : TABLE & COMBAT -->
-                        <div id="tab-combat" class="preview-panel grid lg:grid-cols-12 gap-6 items-stretch">
+                        <div id="tab-combat" class="preview-panel grid lg:grid-cols-12 gap-5 items-stretch">
                             <!-- Colonne scène & PNJ -->
-                            <div class="lg:col-span-7 space-y-3">
-                                <div class="flex items-center justify-between">
-                                    <span class="text-xs font-semibold uppercase tracking-wider text-amber-400/90">Scène
-                                        Active • Taverne du Dragon Assoupi</span>
+                            <div class="lg:col-span-4 space-y-3 flex flex-col justify-between">
+                                <div class="flex items-center justify-between gap-2">
+                                    <span class="text-[11px] font-semibold uppercase tracking-wider text-amber-400/90">Combat • Tour 2</span>
                                     <span
-                                        class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-rose-500/15 text-rose-300 border border-rose-500/30">
+                                        class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-rose-500/15 text-rose-300 border border-rose-500/30">
                                         <span class="w-1.5 h-1.5 rounded-full bg-rose-400 animate-ping"></span>
-                                        Combat Tour 2
+                                        En direct
                                     </span>
                                 </div>
 
-                                <div class="space-y-2.5">
+                                <div class="space-y-2.5 flex-1">
                                     <!-- Personnage Joueur -->
                                     <div
-                                        class="p-3.5 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-between gap-4">
-                                        <div>
-                                            <div class="flex items-center gap-2">
-                                                <span class="font-semibold text-sm text-slate-100">Lyraëlle (Elfe
-                                                    Rôdeuse)</span>
+                                        class="p-3 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-between gap-3">
+                                        <div class="min-w-0 flex-1">
+                                            <div class="flex items-center gap-1.5 flex-wrap">
+                                                <span class="font-semibold text-xs text-slate-100 truncate">Lyraëlle</span>
                                                 <span
-                                                    class="px-2 py-0.5 text-[10px] rounded-md bg-sky-500/15 text-sky-300 border border-sky-400/25">Concentrée</span>
+                                                    class="px-1.5 py-0.5 text-[10px] rounded bg-sky-500/15 text-sky-300 border border-sky-400/25">Concentrée</span>
                                             </div>
-                                            <div
-                                                class="w-48 sm:w-64 h-1.5 bg-slate-800 rounded-full mt-2 overflow-hidden">
-                                                <div
-                                                    class="h-full bg-gradient-to-r from-emerald-500 to-teal-400 w-[82%]">
-                                                </div>
+                                            <div class="w-full h-1.5 bg-slate-800 rounded-full mt-2 overflow-hidden">
+                                                <div class="h-full bg-gradient-to-r from-emerald-500 to-teal-400 w-[82%]"></div>
                                             </div>
                                         </div>
-                                        <div class="text-right">
-                                            <span class="text-sm font-bold text-emerald-400">28 / 34 PV</span>
-                                            <p class="text-[11px] text-slate-500">CA 16 • Init 19</p>
+                                        <div class="text-right shrink-0">
+                                            <span class="text-xs font-bold text-emerald-400">28/34 PV</span>
+                                            <p class="text-[10px] text-slate-500">CA 16</p>
                                         </div>
                                     </div>
 
                                     <!-- Ennemi -->
                                     <div
-                                        class="p-3.5 rounded-xl bg-rose-950/20 border border-rose-500/25 flex items-center justify-between gap-4">
-                                        <div>
-                                            <div class="flex items-center gap-2">
-                                                <span class="font-semibold text-sm text-slate-100">Capitaine
-                                                    Kragh (Chef Bandit)</span>
+                                        class="p-3 rounded-xl bg-rose-950/20 border border-rose-500/25 flex items-center justify-between gap-3">
+                                        <div class="min-w-0 flex-1">
+                                            <div class="flex items-center gap-1.5 flex-wrap">
+                                                <span class="font-semibold text-xs text-slate-100 truncate">Cap. Kragh</span>
                                                 <span
-                                                    class="px-2 py-0.5 text-[10px] rounded-md bg-amber-500/15 text-amber-300 border border-amber-400/25">Empoisonné</span>
+                                                    class="px-1.5 py-0.5 text-[10px] rounded bg-amber-500/15 text-amber-300 border border-amber-400/25">Empoisonné</span>
                                             </div>
-                                            <div
-                                                class="w-48 sm:w-64 h-1.5 bg-slate-800 rounded-full mt-2 overflow-hidden">
-                                                <div
-                                                    class="h-full bg-gradient-to-r from-rose-600 to-orange-400 w-[41%]">
-                                                </div>
+                                            <div class="w-full h-1.5 bg-slate-800 rounded-full mt-2 overflow-hidden">
+                                                <div class="h-full bg-gradient-to-r from-rose-600 to-orange-400 w-[41%]"></div>
                                             </div>
                                         </div>
-                                        <div class="text-right">
-                                            <span class="text-sm font-bold text-rose-400">19 / 46 PV</span>
-                                            <p class="text-[11px] text-slate-500">CA 15 • Init 14</p>
+                                        <div class="text-right shrink-0">
+                                            <span class="text-xs font-bold text-rose-400">19/46 PV</span>
+                                            <p class="text-[10px] text-slate-500">CA 15</p>
                                         </div>
                                     </div>
 
                                     <!-- PNJ Allié -->
                                     <div
-                                        class="p-3.5 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-between gap-4">
-                                        <div>
-                                            <div class="flex items-center gap-2">
-                                                <span class="font-semibold text-sm text-slate-100">Balthazar
-                                                    l'Aubergiste</span>
+                                        class="p-3 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-between gap-3">
+                                        <div class="min-w-0 flex-1">
+                                            <div class="flex items-center gap-1.5 flex-wrap">
+                                                <span class="font-semibold text-xs text-slate-100 truncate">Balthazar</span>
                                                 <span
-                                                    class="px-2 py-0.5 text-[10px] rounded-md bg-violet-500/15 text-violet-300 border border-violet-400/25">PNJ
-                                                    Généré IA</span>
+                                                    class="px-1.5 py-0.5 text-[10px] rounded bg-violet-500/15 text-violet-300 border border-violet-400/25">PNJ IA</span>
                                             </div>
-                                            <div
-                                                class="w-48 sm:w-64 h-1.5 bg-slate-800 rounded-full mt-2 overflow-hidden">
+                                            <div class="w-full h-1.5 bg-slate-800 rounded-full mt-2 overflow-hidden">
                                                 <div class="h-full bg-emerald-500 w-full"></div>
                                             </div>
                                         </div>
-                                        <div class="text-right">
-                                            <span class="text-sm font-bold text-slate-300">12 / 12 PV</span>
-                                            <p class="text-[11px] text-slate-500">CA 10 • Init 8</p>
+                                        <div class="text-right shrink-0">
+                                            <span class="text-xs font-bold text-slate-300">12/12 PV</span>
+                                            <p class="text-[10px] text-slate-500">CA 10</p>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Colonne centrale : Map 3D (Kenney.nl style) -->
+                            <div
+                                class="lg:col-span-4 rounded-2xl bg-black/45 border border-amber-400/25 overflow-hidden flex flex-col justify-between group relative">
+                                <div class="relative flex-1 min-h-[210px] overflow-hidden">
+                                    <img src="tavern-3d-map.jpg" alt="Map tactique 3D Taverne du Dragon Assoupi"
+                                        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-[#0b0d17] via-transparent to-black/30 pointer-events-none"></div>
+                                    <div class="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-semibold bg-black/70 text-amber-300 border border-amber-400/35 backdrop-blur-md">
+                                        <span>🗺️</span>
+                                        <span>Scène 3D • Taverne</span>
+                                    </div>
+                                    <div class="absolute bottom-2.5 left-3 right-3 flex items-center justify-between text-[10px] text-slate-200/90">
+                                        <span class="px-2 py-0.5 rounded bg-black/65 border border-white/10 backdrop-blur-sm">Grille 5ft • Pions 3D</span>
+                                        <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 backdrop-blur-sm">Synchronisée</span>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Colonne Whisper & Journal temps réel -->
                             <div
-                                class="lg:col-span-5 rounded-2xl bg-black/35 border border-white/10 p-4 flex flex-col justify-between gap-4">
+                                class="lg:col-span-4 rounded-2xl bg-black/35 border border-white/10 p-4 flex flex-col justify-between gap-4">
                                 <div>
                                     <div class="flex items-center justify-between mb-3">
                                         <span class="text-xs font-semibold text-slate-300">🤫 Flux Whisper &amp;
@@ -635,19 +682,26 @@
                         <div id="tab-dice" class="preview-panel hidden grid md:grid-cols-2 gap-6 items-center">
                             <div
                                 class="p-6 rounded-2xl bg-gradient-to-br from-violet-950/50 via-[#0e1120] to-amber-950/20 border border-amber-400/25 text-center space-y-4">
-                                <p class="text-xs uppercase tracking-widest text-amber-300/80 font-semibold">Testez le
-                                    d20 en direct</p>
-                                <div id="demo-die-box"
-                                    class="w-24 h-24 mx-auto rounded-2xl bg-gradient-to-br from-amber-400/20 to-violet-600/25 border-2 border-amber-400/60 flex items-center justify-center shadow-[0_0_35px_rgba(212,175,55,0.25)]">
+                                <div class="flex items-center justify-center gap-1.5 flex-wrap">
+                                    <button type="button" data-die="4" class="die-type-btn px-2.5 py-1 rounded-lg text-[11px] font-bold bg-white/5 text-slate-300 border border-white/10 hover:border-amber-400/40 transition">d4</button>
+                                    <button type="button" data-die="6" class="die-type-btn px-2.5 py-1 rounded-lg text-[11px] font-bold bg-white/5 text-slate-300 border border-white/10 hover:border-amber-400/40 transition">d6</button>
+                                    <button type="button" data-die="8" class="die-type-btn px-2.5 py-1 rounded-lg text-[11px] font-bold bg-white/5 text-slate-300 border border-white/10 hover:border-amber-400/40 transition">d8</button>
+                                    <button type="button" data-die="12" class="die-type-btn px-2.5 py-1 rounded-lg text-[11px] font-bold bg-white/5 text-slate-300 border border-white/10 hover:border-amber-400/40 transition">d12</button>
+                                    <button type="button" data-die="20" class="die-type-btn px-2.5 py-1 rounded-lg text-[11px] font-bold bg-amber-500/25 text-amber-300 border border-amber-400/50 transition">d20</button>
+                                </div>
+                                <div id="demo-die-stage"
+                                    class="relative w-48 h-48 mx-auto rounded-2xl bg-radial from-violet-500/15 via-transparent to-transparent flex items-center justify-center cursor-pointer select-none"
+                                    title="Cliquez sur le dé 3D pour lancer">
+                                    <canvas id="demo-die-3d" class="w-48 h-48 block"></canvas>
                                     <span id="demo-die-value"
-                                        class="font-display text-4xl font-extrabold text-amber-300">20</span>
+                                        class="pointer-events-none absolute inset-0 flex items-center justify-center font-display text-3xl sm:text-4xl font-extrabold text-amber-200 drop-shadow-[0_2px_12px_rgba(0,0,0,0.95)] transition-all duration-300">20</span>
                                 </div>
                                 <p id="demo-die-label" class="text-sm font-semibold text-emerald-400">✨ Réussite
                                     Critique
                                     ! (+3 Modificateur = 23)</p>
                                 <button type="button" id="roll-demo-btn"
                                     class="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs sm:text-sm transition shadow-lg">
-                                    🎲 Relancer le d20
+                                    🎲 Lancer le d20
                                 </button>
                             </div>
 
@@ -676,7 +730,53 @@
                             </div>
                         </div>
 
-                        <!-- TAB 3 : CO-MJ IA LOCALE -->
+                        <!-- TAB 3 : SOUNDBOARD & AMBIANCE LIVE -->
+                        <div id="tab-sound" class="preview-panel hidden grid md:grid-cols-2 gap-6 items-center">
+                            <div class="p-5 rounded-2xl bg-black/45 border border-sky-400/25 space-y-4 text-left">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs font-semibold uppercase tracking-wider text-sky-300">🎛️ Banque Sonore Live</span>
+                                    <div class="flex items-end gap-1 h-4" aria-hidden="true">
+                                        <span class="eq-bar w-1 h-full bg-amber-400 rounded-full" style="animation-delay: 0s"></span>
+                                        <span class="eq-bar w-1 h-full bg-violet-400 rounded-full" style="animation-delay: 0.2s"></span>
+                                        <span class="eq-bar w-1 h-full bg-sky-400 rounded-full" style="animation-delay: 0.4s"></span>
+                                        <span class="eq-bar w-1 h-full bg-emerald-400 rounded-full" style="animation-delay: 0.15s"></span>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-2.5 text-xs">
+                                    <button type="button" data-sound="Taverne du Dragon (Ambiance)" class="sound-pad-btn p-3 rounded-xl bg-amber-500/15 border border-amber-400/40 text-amber-200 font-semibold text-left transition hover:bg-amber-500/25">
+                                        🍺 Taverne animée
+                                        <span class="block text-[10px] text-amber-300/70 font-normal mt-0.5">Boucle • Partagée</span>
+                                    </button>
+                                    <button type="button" data-sound="Donjon & Torches (Ambiance)" class="sound-pad-btn p-3 rounded-xl bg-white/[0.04] border border-white/10 text-slate-200 font-semibold text-left transition hover:border-violet-400/40">
+                                        🕯️ Crypte &amp; Torches
+                                        <span class="block text-[10px] text-slate-400 font-normal mt-0.5">Boucle • Ambiance</span>
+                                    </button>
+                                    <button type="button" data-sound="Rugissement de Dragon (SFX)" class="sound-pad-btn p-3 rounded-xl bg-white/[0.04] border border-white/10 text-slate-200 font-semibold text-left transition hover:border-rose-400/40">
+                                        🐉 Rugissement (SFX)
+                                        <span class="block text-[10px] text-slate-400 font-normal mt-0.5">Effet instantané</span>
+                                    </button>
+                                    <button type="button" data-sound="Épées & Boucliers (SFX)" class="sound-pad-btn p-3 rounded-xl bg-white/[0.04] border border-white/10 text-slate-200 font-semibold text-left transition hover:border-sky-400/40">
+                                        ⚔️ Choc d'épées (SFX)
+                                        <span class="block text-[10px] text-slate-400 font-normal mt-0.5">Effet instantané</span>
+                                    </button>
+                                </div>
+                                <p id="sound-pad-status" class="text-[11px] text-emerald-400 pt-1 border-t border-white/10">
+                                    ● Lecture synchronisée sur les appareils des 4 joueurs : Taverne du Dragon (Ambiance)
+                                </p>
+                            </div>
+
+                            <div class="space-y-3 text-left">
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-sky-500/15 text-sky-300 border border-sky-400/25">
+                                    🔊 Immersion Audio &amp; Scènes
+                                </span>
+                                <h3 class="text-lg font-bold text-slate-100">Ambiances &amp; effets partagés en un clic</h3>
+                                <p class="text-sm text-slate-400 leading-relaxed">
+                                    Importez vos propres musiques et bruitages dans votre bibliothèque locale. D'un clic, diffusez une piste d'ambiance ou un effet sonore directement sur les haut-parleurs des joueurs (Desktop &amp; Android).
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- TAB 4 : CO-MJ IA LOCALE -->
                         <div id="tab-ai" class="preview-panel hidden grid md:grid-cols-2 gap-6 items-center">
                             <div class="space-y-3 text-left">
                                 <span
@@ -728,28 +828,39 @@
         </section>
 
         <!-- 2. BENTO GRID DES FONCTIONNALITÉS -->
-        <section id="features" class="scroll-mt-24 space-y-10">
+        <section id="features" class="scroll-mt-24 space-y-8 reveal-on-scroll">
             <div class="text-center max-w-2xl mx-auto space-y-3">
-                <span class="text-xs font-bold uppercase tracking-[0.2em] text-amber-400">Arsenal du Maître du
-                    Jeu</span>
+                <span class="text-xs font-bold uppercase tracking-[0.2em] text-amber-400">Arsenal Complet</span>
                 <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-100">
                     Tout ce qu'il faut autour de la table.
                 </h2>
                 <p class="text-sm sm:text-base text-slate-400">
-                    Conçu pour rester fluide pendant la partie, fiable même sans connexion internet et respectueux de
-                    vos
-                    histoires.
+                    Conçu pour rester fluide pendant la partie, fiable sans connexion internet et riche en outils temps réel.
                 </p>
+
+                <!-- Filtres interactifs -->
+                <div class="flex flex-wrap items-center justify-center gap-2 pt-2" role="group" aria-label="Filtrer les fonctionnalités">
+                    <button type="button" data-filter="all" class="feature-filter-btn px-3.5 py-1.5 rounded-full text-xs font-semibold bg-amber-500/20 text-amber-300 border border-amber-400/40 transition">
+                        ✦ Toutes
+                    </button>
+                    <button type="button" data-filter="mj" class="feature-filter-btn px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white/5 text-slate-300 border border-white/10 hover:border-amber-400/30 transition">
+                        👑 Maître du Jeu
+                    </button>
+                    <button type="button" data-filter="table" class="feature-filter-btn px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white/5 text-slate-300 border border-white/10 hover:border-amber-400/30 transition">
+                        🎲 Table &amp; Joueurs
+                    </button>
+                    <button type="button" data-filter="ai" class="feature-filter-btn px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white/5 text-slate-300 border border-white/10 hover:border-amber-400/30 transition">
+                        ✨ IA &amp; Exports
+                    </button>
+                </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-6 gap-5">
-                <!-- Grande Carte 1 -->
-                <article class="bento-card md:col-span-3 rounded-2xl p-7 flex flex-col justify-between gap-5">
+                <!-- Carte 1 -->
+                <article data-category="mj table" class="feature-card bento-card md:col-span-3 rounded-2xl p-7 flex flex-col justify-between gap-5">
                     <div>
-                        <div
-                            class="w-11 h-11 rounded-xl bg-emerald-500/15 border border-emerald-400/30 flex items-center justify-center text-emerald-300 mb-5">
-                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <div class="w-11 h-11 rounded-xl bg-emerald-500/15 border border-emerald-400/30 flex items-center justify-center text-emerald-300 mb-5">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                 <ellipse cx="12" cy="5" rx="9" ry="3" />
                                 <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" />
                                 <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />
@@ -757,68 +868,51 @@
                         </div>
                         <h3 class="text-xl font-bold text-slate-100 mb-2">100 % Hors-ligne &amp; Local-First</h3>
                         <p class="text-sm text-slate-400 leading-relaxed">
-                            Vos campagnes, fiches, notes et historiques vivent dans une base SQLite embarquée sur votre
-                            machine. Un trousseau local SHA-256 permet même de vous reconnecter sans accès internet.
+                            Vos campagnes, fiches, notes et historiques vivent dans une base SQLite embarquée sur votre machine. Un trousseau local SHA-256 permet même de vous reconnecter sans accès internet.
                         </p>
                     </div>
                     <div class="flex flex-wrap gap-2 text-[11px] font-medium text-emerald-300/90">
-                        <span class="px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/20">SQLite
-                            embarquée</span>
-                        <span class="px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/20">Zéro
-                            télémétrie</span>
+                        <span class="px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/20">SQLite embarquée</span>
+                        <span class="px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/20">Zéro télémétrie</span>
                     </div>
                 </article>
 
-                <!-- Grande Carte 2 -->
-                <article class="bento-card md:col-span-3 rounded-2xl p-7 flex flex-col justify-between gap-5">
+                <!-- Carte 2 -->
+                <article data-category="mj ai" class="feature-card bento-card md:col-span-3 rounded-2xl p-7 flex flex-col justify-between gap-5">
                     <div>
-                        <div
-                            class="w-11 h-11 rounded-xl bg-violet-500/15 border border-violet-400/30 flex items-center justify-center text-violet-300 mb-5">
-                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                <path
-                                    d="M12 3l1.912 5.813a2 2 0 0 0 1.275 1.275L21 12l-5.813 1.912a2 2 0 0 0-1.275 1.275L12 21l-1.912-5.813a2 2 0 0 0-1.275-1.275L3 12l5.813-1.912a2 2 0 0 0 1.275-1.275L12 3z" />
+                        <div class="w-11 h-11 rounded-xl bg-violet-500/15 border border-violet-400/30 flex items-center justify-center text-violet-300 mb-5">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M12 3l1.912 5.813a2 2 0 0 0 1.275 1.275L21 12l-5.813 1.912a2 2 0 0 0-1.275 1.275L12 21l-1.912-5.813a2 2 0 0 0-1.275-1.275L3 12l5.813-1.912a2 2 0 0 0 1.275-1.275L12 3z" />
                             </svg>
                         </div>
-                        <h3 class="text-xl font-bold text-slate-100 mb-2">Assisté par IA Locale (Ollama)</h3>
+                        <h3 class="text-xl font-bold text-slate-100 mb-2">Co-MJ IA Hybride (Ollama ou Cloud)</h3>
                         <p class="text-sm text-slate-400 leading-relaxed">
-                            Générez des PNJ, ennemis et scénarios à la volée avec Ollama (Mistral) sans dépendre d'une
-                            API payante. Résumez vos notes Markdown de session grâce aux sous-agents dédiés.
+                            Générez PNJ, scènes, intrigues, backstories et résumés Markdown avec Ollama en local (Mistral, Llama, Qwen) ou connectez votre clé API externe (Gemini, OpenAI, Anthropic) — ou jouez sans IA.
                         </p>
                     </div>
                     <div class="flex flex-wrap gap-2 text-[11px] font-medium text-violet-300/90">
-                        <span class="px-2.5 py-1 rounded-lg bg-violet-500/10 border border-violet-500/20">PNJ &amp;
-                            Scénarios IA</span>
-                        <span class="px-2.5 py-1 rounded-lg bg-violet-500/10 border border-violet-500/20">Résumé
-                            Markdown</span>
+                        <span class="px-2.5 py-1 rounded-lg bg-violet-500/10 border border-violet-500/20">Ollama Local</span>
+                        <span class="px-2.5 py-1 rounded-lg bg-violet-500/10 border border-violet-500/20">API Externes</span>
                     </div>
                 </article>
 
-                <!-- Petite Carte 3 -->
-                <article class="bento-card md:col-span-2 rounded-2xl p-6 space-y-3">
-                    <div
-                        class="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-400/30 flex items-center justify-center text-amber-300">
-                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                            <circle cx="9" cy="7" r="4" />
-                            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                <!-- Carte 3 -->
+                <article data-category="table" class="feature-card bento-card md:col-span-2 rounded-2xl p-6 space-y-3">
+                    <div class="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-400/30 flex items-center justify-center text-amber-300">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
                         </svg>
                     </div>
-                    <h3 class="text-lg font-bold text-slate-100">Multijoueur Local</h3>
+                    <h3 class="text-lg font-bold text-slate-100">Dés 3D &amp; Statistiques</h3>
                     <p class="text-sm text-slate-400 leading-relaxed">
-                        Partagez vos lancers de dés, vos images de scène et vos suivis de session en direct par simple
-                        token d'invitation.
+                        Overlay 3D WebGL temps réel, skins de dés à débloquer, modificateurs automatiques et historique complet des jets.
                     </p>
                 </article>
 
-                <!-- Petite Carte 4 -->
-                <article class="bento-card md:col-span-2 rounded-2xl p-6 space-y-3">
-                    <div
-                        class="w-10 h-10 rounded-xl bg-rose-500/15 border border-rose-400/30 flex items-center justify-center text-rose-300">
-                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <!-- Carte 4 -->
+                <article data-category="mj table" class="feature-card bento-card md:col-span-2 rounded-2xl p-6 space-y-3">
+                    <div class="w-10 h-10 rounded-xl bg-rose-500/15 border border-rose-400/30 flex items-center justify-center text-rose-300">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                             <polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5" />
                             <line x1="13" y1="19" x2="19" y2="13" />
                             <line x1="16" y1="16" x2="20" y2="20" />
@@ -827,24 +921,65 @@
                     </div>
                     <h3 class="text-lg font-bold text-slate-100">Combat &amp; États D&amp;D 5e</h3>
                     <p class="text-sm text-slate-400 leading-relaxed">
-                        Suivez les PV, l'initiative et les effets d'état simultanés avec gestion automatique des règles
-                        d'exclusion.
+                        Suivi de l'initiative, PV, CA et effets d'état simultanés avec gestion automatique des règles d'exclusion.
                     </p>
                 </article>
 
-                <!-- Petite Carte 5 -->
-                <article class="bento-card md:col-span-2 rounded-2xl p-6 space-y-3">
-                    <div
-                        class="w-10 h-10 rounded-xl bg-sky-500/15 border border-sky-400/30 flex items-center justify-center text-sky-300">
-                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <!-- Carte 5 -->
+                <article data-category="mj table" class="feature-card bento-card md:col-span-2 rounded-2xl p-6 space-y-3">
+                    <div class="w-10 h-10 rounded-xl bg-sky-500/15 border border-sky-400/30 flex items-center justify-center text-sky-300">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                            <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                            <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-100">Banque Sonore Live</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">
+                        Importez vos musiques et bruitages et déclenchez-les en direct sur les appareils de toute la table.
+                    </p>
+                </article>
+
+                <!-- Carte 6 -->
+                <article data-category="table" class="feature-card bento-card md:col-span-2 rounded-2xl p-6 space-y-3">
+                    <div class="w-10 h-10 rounded-xl bg-teal-500/15 border border-teal-400/30 flex items-center justify-center text-teal-300">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
+                            <line x1="12" y1="18" x2="12.01" y2="18" />
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-100">LAN &amp; Compagnon Android</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">
+                        Rejoignez une partie par lien ou code <code class="text-teal-300">LK-...</code> depuis un PC ou un smartphone Android sur le même Wi-Fi.
+                    </p>
+                </article>
+
+                <!-- Carte 7 -->
+                <article data-category="ai table" class="feature-card bento-card md:col-span-2 rounded-2xl p-6 space-y-3">
+                    <div class="w-10 h-10 rounded-xl bg-indigo-500/15 border border-indigo-400/30 flex items-center justify-center text-indigo-300">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                            <line x1="16" y1="13" x2="8" y2="13" />
+                            <line x1="16" y1="17" x2="8" y2="17" />
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-100">Fiches, PDF, Drive &amp; Discord</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">
+                        Fiches D&amp;D 5e complètes, avatars personnalisés, export PDF, sauvegarde Google Drive et partage Discord.
+                    </p>
+                </article>
+
+                <!-- Carte 8 -->
+                <article data-category="mj" class="feature-card bento-card md:col-span-2 rounded-2xl p-6 space-y-3">
+                    <div class="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-400/30 flex items-center justify-center text-amber-300">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                         </svg>
                     </div>
-                    <h3 class="text-lg font-bold text-slate-100">Mode Whisper &amp; Book</h3>
+                    <h3 class="text-lg font-bold text-slate-100">Whispers, Cartes &amp; Book</h3>
                     <p class="text-sm text-slate-400 leading-relaxed">
-                        Glissez des secrets en privé aux joueurs ciblés et publiez un <em>Campaign Book</em> Markdown
-                        commun.
+                        Glissez des secrets en privé aux joueurs ciblés, projetez vos cartes de donjon et publiez un <em>Campaign Book</em> Markdown.
                     </p>
                 </article>
             </div>
@@ -903,7 +1038,90 @@
             </div>
         </section>
 
-        <!-- 4. BANNIÈRE CTA FINALE -->
+        <!-- 4. RECOMMANDATIONS TECHNIQUES (INTERACTIF) -->
+        <section id="specs" class="scroll-mt-24 space-y-8 reveal-on-scroll">
+            <div class="text-center max-w-2xl mx-auto space-y-3">
+                <span class="text-xs font-bold uppercase tracking-[0.2em] text-amber-400">Configuration Matérielle</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-100">
+                    Recommandations Techniques
+                </h2>
+                <p class="text-sm sm:text-base text-slate-400">
+                    Choisissez votre mode d'utilisation pour afficher la configuration adaptée à votre machine.
+                </p>
+
+                <!-- Sélecteur dynamique de profil -->
+                <div class="inline-flex items-center gap-1.5 bg-black/45 p-1.5 rounded-2xl border border-white/10 mt-2" role="tablist" aria-label="Profil matériel">
+                    <button type="button" data-spec="local-ai"
+                        class="spec-tab px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition bg-violet-500/25 text-violet-200 border border-violet-400/40">
+                        🤖 IA Locale (Ollama)
+                    </button>
+                    <button type="button" data-spec="cloud-noai"
+                        class="spec-tab px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition text-slate-400 hover:text-slate-200 border border-transparent">
+                        ☁️ IA Externe / Sans IA
+                    </button>
+                </div>
+            </div>
+
+            <!-- Profil 1 : IA Locale -->
+            <div id="spec-local-ai" class="spec-panel grid md:grid-cols-2 gap-5">
+                <article class="bento-card rounded-2xl p-6 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span class="px-3 py-1 rounded-full text-xs font-bold bg-slate-800 text-slate-200 border border-white/15">Minimum (Modèles 3B–4B)</span>
+                        <span class="text-xs text-slate-400">Llama 3.2 3B • Qwen 2.5 3B</span>
+                    </div>
+                    <ul class="space-y-2.5 text-sm text-slate-300">
+                        <li class="flex justify-between gap-4 border-b border-white/5 pb-2"><span class="text-slate-400">GPU / VRAM (PC)</span><strong class="text-right text-slate-100">NVIDIA 6–8 Go VRAM</strong></li>
+                        <li class="flex justify-between gap-4 border-b border-white/5 pb-2"><span class="text-slate-400">Apple Silicon (Mac)</span><strong class="text-right text-slate-100">M1 / M2 • 16 Go unifiés</strong></li>
+                        <li class="flex justify-between gap-4 border-b border-white/5 pb-2"><span class="text-slate-400">RAM &amp; CPU (PC)</span><strong class="text-right text-slate-100">16 Go RAM • 6 cœurs</strong></li>
+                        <li class="flex justify-between gap-4"><span class="text-slate-400">Stockage</span><strong class="text-right text-slate-100">SSD • 15 Go libres</strong></li>
+                    </ul>
+                </article>
+
+                <article class="bento-card rounded-2xl p-6 space-y-4 border-violet-400/30">
+                    <div class="flex items-center justify-between">
+                        <span class="px-3 py-1 rounded-full text-xs font-bold bg-violet-500/20 text-violet-200 border border-violet-400/35">✨ Recommandé (Modèles 7B–14B)</span>
+                        <span class="text-xs text-violet-300">Mistral • Qwen 7B/14B</span>
+                    </div>
+                    <ul class="space-y-2.5 text-sm text-slate-300">
+                        <li class="flex justify-between gap-4 border-b border-white/5 pb-2"><span class="text-slate-400">GPU / VRAM (PC)</span><strong class="text-right text-amber-300">RTX 3060 12 Go / 4060 Ti 16 Go</strong></li>
+                        <li class="flex justify-between gap-4 border-b border-white/5 pb-2"><span class="text-slate-400">Apple Silicon (Mac)</span><strong class="text-right text-amber-300">M1 Pro–M4 • 24–32 Go unifiés</strong></li>
+                        <li class="flex justify-between gap-4 border-b border-white/5 pb-2"><span class="text-slate-400">RAM &amp; CPU (PC)</span><strong class="text-right text-slate-100">32 Go RAM • 8 cœurs</strong></li>
+                        <li class="flex justify-between gap-4"><span class="text-slate-400">Stockage &amp; Réseau</span><strong class="text-right text-slate-100">SSD NVMe 30+ Go • Ethernet / Wi-Fi 6</strong></li>
+                    </ul>
+                </article>
+            </div>
+
+            <!-- Profil 2 : IA Externe / Sans IA -->
+            <div id="spec-cloud-noai" class="spec-panel hidden grid md:grid-cols-2 gap-5">
+                <article class="bento-card rounded-2xl p-6 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span class="px-3 py-1 rounded-full text-xs font-bold bg-slate-800 text-slate-200 border border-white/15">Minimum Desktop</span>
+                        <span class="text-xs text-slate-400">Ultra léger</span>
+                    </div>
+                    <ul class="space-y-2.5 text-sm text-slate-300">
+                        <li class="flex justify-between gap-4 border-b border-white/5 pb-2"><span class="text-slate-400">Processeur</span><strong class="text-right text-slate-100">2–4 cœurs 64-bit (Core i3 / Ryzen 3)</strong></li>
+                        <li class="flex justify-between gap-4 border-b border-white/5 pb-2"><span class="text-slate-400">Mémoire RAM</span><strong class="text-right text-slate-100">4 Go RAM</strong></li>
+                        <li class="flex justify-between gap-4 border-b border-white/5 pb-2"><span class="text-slate-400">Graphique</span><strong class="text-right text-slate-100">iGPU compatible WebGL 2</strong></li>
+                        <li class="flex justify-between gap-4"><span class="text-slate-400">Stockage &amp; OS</span><strong class="text-right text-slate-100">1 Go SSD • Win 10+ / macOS 12+ / Linux</strong></li>
+                    </ul>
+                </article>
+
+                <article class="bento-card rounded-2xl p-6 space-y-4 border-emerald-400/30">
+                    <div class="flex items-center justify-between">
+                        <span class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-200 border border-emerald-400/35">✨ Recommandé Desktop &amp; Mobile</span>
+                        <span class="text-xs text-emerald-300">Fluide en partie</span>
+                    </div>
+                    <ul class="space-y-2.5 text-sm text-slate-300">
+                        <li class="flex justify-between gap-4 border-b border-white/5 pb-2"><span class="text-slate-400">Processeur</span><strong class="text-right text-amber-300">4+ cœurs (Core i5 / Ryzen 5 / M1+)</strong></li>
+                        <li class="flex justify-between gap-4 border-b border-white/5 pb-2"><span class="text-slate-400">Mémoire RAM</span><strong class="text-right text-amber-300">8 Go RAM (audio + dés 3D + cartes)</strong></li>
+                        <li class="flex justify-between gap-4 border-b border-white/5 pb-2"><span class="text-slate-400">Compagnon Android</span><strong class="text-right text-slate-100">Android 8+ (ARM64) • 4 Go RAM</strong></li>
+                        <li class="flex justify-between gap-4"><span class="text-slate-400">Réseau</span><strong class="text-right text-slate-100">Wi-Fi LAN (ou Internet pour API / Drive)</strong></li>
+                    </ul>
+                </article>
+            </div>
+        </section>
+
+        <!-- 5. BANNIÈRE CTA FINALE -->
         <section
             class="relative overflow-hidden rounded-3xl p-8 sm:p-12 text-center bg-gradient-to-br from-violet-950/60 via-[#121526]/90 to-amber-950/40 border border-amber-400/30 backdrop-blur-xl shadow-2xl">
             <div class="max-w-2xl mx-auto space-y-6">
@@ -977,8 +1195,24 @@
         </div>
     </footer>
 
-    <!-- Interactions légères (Spotlight Bento + Onglets Aperçu + Dé d20 interactif) -->
+    <!-- Interactions légères (Spotlight Bento + Onglets Aperçu + Dé interactif + Soundboard + Filtres + Specs + Scroll Reveal) -->
     <script>
+        // Révélation fluide au scroll
+        const revealEls = document.querySelectorAll('.reveal-on-scroll');
+        if ('IntersectionObserver' in window) {
+            const io = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        io.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.12 });
+            revealEls.forEach((el) => io.observe(el));
+        } else {
+            revealEls.forEach((el) => el.classList.add('is-visible'));
+        }
+
         // Effet spotlight au survol des cartes Bento
         document.querySelectorAll('.bento-card').forEach((card) => {
             card.addEventListener('mousemove', (e) => {
@@ -1006,6 +1240,9 @@
                 panels.forEach((panel) => {
                     if (panel.id === `tab-${target}`) {
                         panel.classList.remove('hidden');
+                        if (target === 'dice' && typeof window.__lkResizeDice3D === 'function') {
+                            window.__lkResizeDice3D();
+                        }
                     } else {
                         panel.classList.add('hidden');
                     }
@@ -1013,35 +1250,263 @@
             });
         });
 
-        // Mini lancer de d20 interactif dans l'onglet Dés
-        const rollBtn = document.getElementById('roll-demo-btn');
-        const dieBox = document.getElementById('demo-die-box');
-        const dieValue = document.getElementById('demo-die-value');
-        const dieLabel = document.getElementById('demo-die-label');
-
-        if (rollBtn && dieBox && dieValue && dieLabel) {
-            rollBtn.addEventListener('click', () => {
-                dieBox.classList.remove('dice-rolling');
-                void dieBox.offsetWidth;
-                dieBox.classList.add('dice-rolling');
-
-                const roll = Math.floor(Math.random() * 20) + 1;
-                const total = roll + 3;
-                dieValue.textContent = String(roll);
-
-                dieLabel.className = 'text-sm font-semibold';
-                if (roll === 20) {
-                    dieLabel.classList.add('text-emerald-400');
-                    dieLabel.textContent = `✨ Réussite Critique ! (+3 Modificateur = ${total})`;
-                } else if (roll === 1) {
-                    dieLabel.classList.add('text-rose-400');
-                    dieLabel.textContent = `💀 Échec Critique ! (+3 Modificateur = ${total})`;
-                } else {
-                    dieLabel.classList.add('text-amber-300');
-                    dieLabel.textContent = `🎲 Jet : ${roll} (+3 Modificateur = ${total})`;
+        // Pads Soundboard interactifs
+        const soundBtns = document.querySelectorAll('.sound-pad-btn');
+        const soundStatus = document.getElementById('sound-pad-status');
+        soundBtns.forEach((btn) => {
+            btn.addEventListener('click', () => {
+                const name = btn.getAttribute('data-sound') || '';
+                soundBtns.forEach((b) => {
+                    b.classList.remove('bg-amber-500/15', 'border-amber-400/40', 'text-amber-200');
+                    b.classList.add('bg-white/[0.04]', 'border-white/10', 'text-slate-200');
+                });
+                btn.classList.add('bg-amber-500/15', 'border-amber-400/40', 'text-amber-200');
+                btn.classList.remove('bg-white/[0.04]', 'border-white/10', 'text-slate-200');
+                if (soundStatus) {
+                    soundStatus.textContent = `● Lecture synchronisée sur les appareils des 4 joueurs : ${name}`;
                 }
             });
+        });
+
+        // Filtres interactifs des fonctionnalités
+        const filterBtns = document.querySelectorAll('.feature-filter-btn');
+        const featureCards = document.querySelectorAll('.feature-card');
+        filterBtns.forEach((btn) => {
+            btn.addEventListener('click', () => {
+                const filter = btn.getAttribute('data-filter') || 'all';
+                filterBtns.forEach((b) => {
+                    b.classList.remove('bg-amber-500/20', 'text-amber-300', 'border-amber-400/40');
+                    b.classList.add('bg-white/5', 'text-slate-300', 'border-white/10');
+                });
+                btn.classList.add('bg-amber-500/20', 'text-amber-300', 'border-amber-400/40');
+                btn.classList.remove('bg-white/5', 'text-slate-300', 'border-white/10');
+
+                featureCards.forEach((card) => {
+                    const cats = (card.getAttribute('data-category') || '').split(' ');
+                    if (filter === 'all' || cats.includes(filter)) {
+                        card.classList.remove('hidden');
+                    } else {
+                        card.classList.add('hidden');
+                    }
+                });
+            });
+        });
+
+        // Sélecteur interactif des recommandations techniques
+        const specTabs = document.querySelectorAll('.spec-tab');
+        const specPanels = document.querySelectorAll('.spec-panel');
+        specTabs.forEach((tab) => {
+            tab.addEventListener('click', () => {
+                const target = tab.getAttribute('data-spec');
+                specTabs.forEach((t) => {
+                    t.classList.remove('bg-violet-500/25', 'text-violet-200', 'border-violet-400/40');
+                    t.classList.add('text-slate-400', 'border-transparent');
+                });
+                tab.classList.add('bg-violet-500/25', 'text-violet-200', 'border-violet-400/40');
+                tab.classList.remove('text-slate-400', 'border-transparent');
+
+                specPanels.forEach((panel) => {
+                    if (panel.id === `spec-${target}`) {
+                        panel.classList.remove('hidden');
+                    } else {
+                        panel.classList.add('hidden');
+                    }
+                });
+            });
+        });
+    </script>
+
+    <!-- Dé 3D WebGL interactif (Three.js) -->
+    <script type="module">
+        const canvas = document.getElementById('demo-die-3d');
+        const stage = document.getElementById('demo-die-stage');
+        const rollBtn = document.getElementById('roll-demo-btn');
+        const dieValue = document.getElementById('demo-die-value');
+        const dieLabel = document.getElementById('demo-die-label');
+        const dieTypeBtns = document.querySelectorAll('.die-type-btn');
+
+        let activeDieSides = 20;
+        let isRolling = false;
+        let rollStart = 0;
+        const rollDuration = 950;
+        let spinVel = { x: 0, y: 0, z: 0 };
+
+        async function initDice3D() {
+            if (!canvas) return;
+            try {
+                const THREE = await import('https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js');
+
+                const scene = new THREE.Scene();
+                const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
+                camera.position.set(0, 0.2, 4.1);
+
+                const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+                renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+                renderer.setSize(192, 192, false);
+
+                window.__lkResizeDice3D = () => {
+                    const size = Math.max(stage?.clientWidth || 192, 160);
+                    renderer.setSize(size, size, false);
+                    camera.aspect = 1;
+                    camera.updateProjectionMatrix();
+                };
+
+                // Éclairage arcanique 3 points
+                scene.add(new THREE.AmbientLight(0xc4b5fd, 0.85));
+                const keyLight = new THREE.DirectionalLight(0xffe4a0, 2.2);
+                keyLight.position.set(3, 4, 5);
+                scene.add(keyLight);
+
+                const rimLight = new THREE.PointLight(0x8b5cf6, 3.2, 12);
+                rimLight.position.set(-3, -2, 2.5);
+                scene.add(rimLight);
+
+                const goldGlow = new THREE.PointLight(0xd4af37, 2.2, 10);
+                goldGlow.position.set(2.5, -2.5, 3);
+                scene.add(goldGlow);
+
+                const bodyMat = new THREE.MeshStandardMaterial({
+                    color: 0x1b1536,
+                    roughness: 0.26,
+                    metalness: 0.72,
+                    flatShading: true
+                });
+                const edgeMat = new THREE.LineBasicMaterial({ color: 0xf6c945, transparent: true, opacity: 0.92 });
+
+                let dieGroup = new THREE.Group();
+                scene.add(dieGroup);
+
+                function buildDieMesh(sides) {
+                    while (dieGroup.children.length > 0) {
+                        const child = dieGroup.children[0];
+                        dieGroup.remove(child);
+                        child.geometry?.dispose();
+                    }
+
+                    let geom;
+                    switch (sides) {
+                        case 4: geom = new THREE.TetrahedronGeometry(1.28); break;
+                        case 6: geom = new THREE.BoxGeometry(1.52, 1.52, 1.52); break;
+                        case 8: geom = new THREE.OctahedronGeometry(1.25); break;
+                        case 12: geom = new THREE.DodecahedronGeometry(1.18); break;
+                        default: geom = new THREE.IcosahedronGeometry(1.22, 0); break;
+                    }
+
+                    const mesh = new THREE.Mesh(geom, bodyMat);
+                    const edges = new THREE.LineSegments(new THREE.EdgesGeometry(geom), edgeMat);
+                    dieGroup.add(mesh);
+                    dieGroup.add(edges);
+                }
+
+                buildDieMesh(activeDieSides);
+
+                function finishRoll() {
+                    const roll = Math.floor(Math.random() * activeDieSides) + 1;
+                    const total = roll + 3;
+
+                    if (dieValue) {
+                        dieValue.textContent = String(roll);
+                        dieValue.classList.remove('opacity-0', 'scale-75');
+                        dieValue.classList.add('opacity-100', 'scale-100');
+                    }
+
+                    if (dieLabel) {
+                        dieLabel.className = 'text-sm font-semibold transition-colors';
+                        if (roll === activeDieSides) {
+                            dieLabel.classList.add('text-emerald-400');
+                            dieLabel.textContent = `✨ Réussite Critique (d${activeDieSides}) ! (+3 Modificateur = ${total})`;
+                            edgeMat.color.setHex(0x34d399);
+                        } else if (roll === 1) {
+                            dieLabel.classList.add('text-rose-400');
+                            dieLabel.textContent = `💀 Échec Critique (d${activeDieSides}) ! (+3 Modificateur = ${total})`;
+                            edgeMat.color.setHex(0xf43f5e);
+                        } else {
+                            dieLabel.classList.add('text-amber-300');
+                            dieLabel.textContent = `🎲 Jet d${activeDieSides} : ${roll} (+3 Modificateur = ${total})`;
+                            edgeMat.color.setHex(0xf6c945);
+                        }
+                    }
+                }
+
+                function triggerRoll3D() {
+                    if (isRolling) return;
+                    isRolling = true;
+                    rollStart = performance.now();
+                    edgeMat.color.setHex(0xf6c945);
+                    spinVel = {
+                        x: (Math.random() > 0.5 ? 1 : -1) * (0.22 + Math.random() * 0.16),
+                        y: (Math.random() > 0.5 ? 1 : -1) * (0.26 + Math.random() * 0.18),
+                        z: (Math.random() - 0.5) * 0.24
+                    };
+                    if (dieValue) {
+                        dieValue.classList.add('opacity-0', 'scale-75');
+                        dieValue.classList.remove('opacity-100', 'scale-100');
+                    }
+                    if (dieLabel) {
+                        dieLabel.className = 'text-sm font-semibold text-violet-300';
+                        dieLabel.textContent = `🎲 Lancer du d${activeDieSides} en cours...`;
+                    }
+                }
+
+                if (rollBtn) rollBtn.addEventListener('click', triggerRoll3D);
+                if (stage) stage.addEventListener('click', triggerRoll3D);
+
+                dieTypeBtns.forEach((btn) => {
+                    btn.addEventListener('click', () => {
+                        activeDieSides = Number(btn.getAttribute('data-die')) || 20;
+                        dieTypeBtns.forEach((b) => {
+                            b.classList.remove('bg-amber-500/25', 'text-amber-300', 'border-amber-400/50');
+                            b.classList.add('bg-white/5', 'text-slate-300', 'border-white/10');
+                        });
+                        btn.classList.add('bg-amber-500/25', 'text-amber-300', 'border-amber-400/50');
+                        btn.classList.remove('bg-white/5', 'text-slate-300', 'border-white/10');
+                        if (rollBtn) rollBtn.textContent = `🎲 Lancer le d${activeDieSides}`;
+                        buildDieMesh(activeDieSides);
+                        triggerRoll3D();
+                    });
+                });
+
+                function animate(now) {
+                    requestAnimationFrame(animate);
+
+                    if (isRolling) {
+                        const elapsed = now - rollStart;
+                        const t = Math.min(elapsed / rollDuration, 1);
+                        const easeOut = 1 - Math.pow(1 - t, 3);
+                        const damping = 1 - easeOut;
+
+                        dieGroup.rotation.x += spinVel.x * (0.15 + damping * 1.4);
+                        dieGroup.rotation.y += spinVel.y * (0.15 + damping * 1.4);
+                        dieGroup.rotation.z += spinVel.z * (0.15 + damping * 1.4);
+
+                        // Rebond vertical + léger zoom dynamique
+                        const bounce = Math.abs(Math.sin(t * Math.PI * 2.5)) * (1 - t) * 0.42;
+                        dieGroup.position.y = bounce;
+                        const scale = 1 + Math.sin(t * Math.PI) * 0.14;
+                        dieGroup.scale.setScalar(scale);
+
+                        if (t >= 1) {
+                            isRolling = false;
+                            dieGroup.position.y = 0;
+                            dieGroup.scale.setScalar(1);
+                            finishRoll();
+                        }
+                    } else {
+                        dieGroup.rotation.y += 0.008;
+                        dieGroup.rotation.x = Math.sin(now * 0.0011) * 0.22;
+                        dieGroup.position.y = Math.sin(now * 0.0022) * 0.06;
+                    }
+
+                    renderer.render(scene, camera);
+                }
+
+                requestAnimationFrame(animate);
+            } catch (err) {
+                console.warn('WebGL 3D dice fallback:', err);
+            }
         }
+
+        initDice3D();
     </script>
 
 </body>
